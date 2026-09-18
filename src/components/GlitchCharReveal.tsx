@@ -997,7 +997,8 @@ function __OriginkitBase_GlitchCharReveal(props: any) {
         const closestLineChars = lineMap.get(targetLineTop)!
         const closestLineIdx = lineTopValues.indexOf(targetLineTop)
         let midIdx = 0,
-            minXDist = Infinity        closestLineChars.forEach((c, i) => {
+            minXDist = Infinity
+        closestLineChars.forEach((c, i) => {
             const d = Math.abs(c.cx - clientX)
             if (d < minXDist) {
                 minXDist = d
