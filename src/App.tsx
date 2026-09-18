@@ -1,10 +1,9 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { ArrowDownRight, ArrowRight, Check } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { animate, scrambleText } from 'animejs'
 import RibbonGlow from './components/RibbonGlow'
 import FluidText from './components/FluidText'
-import GlitchCharReveal from './components/GlitchCharReveal'
+import CurtainReveal from './components/CurtainReveal'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4'
 const FEATURE_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4'
@@ -107,74 +106,35 @@ function FluidName() {
   )
 }
 
-function AboutGlitchLine({ text, serif = false }: { text: string; serif?: boolean }) {
-  const motionAllowed = useMotionAllowed()
-
-  if (!motionAllowed) {
-    return <span>{text}</span>
-  }
-
-  return (
-    <GlitchCharReveal
-      words={text}
-      color="#E1E0CC"
-      font={{
-        fontFamily: serif ? 'Instrument Serif' : 'Almarai',
-        fontStyle: serif ? 'italic' : 'normal',
-        fontWeight: serif ? 400 : 400,
-        fontSize: 'inherit',
-        lineHeight: '0.96em',
-        letterSpacing: '-0.03em',
-        textAlign: 'center',
-      }}
-      enterAnimation={{
-        mode: 'oneLine',
-        restState: 'solid',
-        replay: true,
-        position: 'above',
-        scrambleIntensity: 100,
-        ease: { type: 'tween', duration: 1.8, ease: [0.16, 1, 0.3, 1] },
-        flickerEnabled: false,
-      }}
-      hoverAnimation={{
-        type: 'wave',
-        lines: 'oneLine',
-        radius: 5,
-        collapse: true,
-        collapseTime: 0.7,
-        glitchChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        glitchShuffle: true,
-        flickerEnabled: false,
-      }}
-      tag="div"
-    />
-  )
-}
-
-function AnimeScrambleBody({ text }: { text: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
+function AboutMaskLine({ text, serif = false, delay = 0 }: { text: string; serif?: boolean; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const motionAllowed = useMotionAllowed()
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !inView || !motionAllowed) return
-    const animation = animate(el, {
-      innerHTML: scrambleText({
-        text,
-        chars: 'uppercase',
-        override: '_',
-        revealRate: 24,
-        settleRate: 18,
-        settleDuration: 900,
-        perturbation: 0.65,
-        seed: 42,
-      }),
-    })
-    return () => { animation.cancel() }
-  }, [inView, motionAllowed, text])
-
-  return <span ref={ref}>{text}</span>
+  return (
+    <div ref={ref} className="min-h-[1em]">
+      {!motionAllowed || !inView ? (
+        <span className="inline-block">{text}</span>
+      ) : (
+        <CurtainReveal
+          text={text}
+          color="#E1E0CC"
+          direction="bottom-to-top"
+          transition={{ type: 'tween', duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
+          font={{
+            fontFamily: serif ? 'Instrument Serif' : 'Almarai',
+            fontStyle: serif ? 'italic' : 'normal',
+            fontWeight: 400,
+            fontSize: 'inherit',
+            lineHeight: '0.96em',
+            letterSpacing: '-0.03em',
+            textAlign: 'center',
+          }}
+          tag="div"
+        />
+      )}
+    </div>
+  )
 }
 
 function PortfolioRibbon() {
@@ -293,13 +253,13 @@ function About() {
       <div className="mx-auto max-w-[1400px] rounded-[28px] bg-[#11110f]/88 px-6 py-20 text-center backdrop-blur-[2px] sm:px-10 md:px-16 md:py-28 lg:px-24 lg:py-36">
         <p className="mb-8 text-[10px] uppercase tracking-[0.32em] text-primary/60 sm:text-xs">About / 01</p>
         <div className="mx-auto max-w-5xl text-3xl leading-[0.96] text-[#E1E0CC] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-          <div className="scramble-line"><AboutGlitchLine text="I am Hamza Qady," /></div>
-          <div className="scramble-line mt-1 font-serif italic"><AboutGlitchLine text="a visual designer who codes." serif /></div>
-          <div className="scramble-line mt-1"><AboutGlitchLine text="I shape brands, interfaces and expressive digital experiences." /></div>
+          <div><AboutMaskLine text="I am Hamza Qady," delay={0} /></div>
+          <div className="mt-1 font-serif italic"><AboutMaskLine text="a visual designer who codes." serif delay={0.12} /></div>
+          <div className="mt-1"><AboutMaskLine text="I shape brands, interfaces and expressive digital experiences." delay={0.24} /></div>
         </div>
 
         <p className="mx-auto mt-12 max-w-3xl text-sm leading-7 text-primary/80 sm:text-base md:mt-16 md:text-lg">
-          <AnimeScrambleBody text={body} />
+          {body}
         </p>
       </div>
     </section>
