@@ -11,7 +11,7 @@ function FlowingMenu({
   marqueeBgColor = '#fff',
   marqueeTextColor = '#120F17',
   borderColor = '#fff'
-}) {
+}: any) {
   return (
     <div className="menu-wrap" style={{ backgroundColor: bgColor }}>
       <nav className="menu" aria-label="Expertise">
