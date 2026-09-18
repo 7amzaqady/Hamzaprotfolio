@@ -4,7 +4,6 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
-import GradientText from './components/GradientText'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
@@ -396,27 +395,17 @@ function Expertise() {
 function Contact() {
   return (
     <footer id="contact" className="bg-transparent px-3 pb-3 sm:px-4 sm:pb-4 md:px-6 md:pb-6">
-      <div className="rounded-[28px] bg-primary px-6 py-16 text-[#090909] sm:px-10 md:px-14 md:py-24">
+      <div className="contact-space-panel rounded-[28px] px-6 py-16 sm:px-10 md:px-14 md:py-24">
         <div className="mx-auto max-w-[1400px]">
-          <p className="text-[10px] uppercase tracking-[0.3em] opacity-60 sm:text-xs">Contact / 03</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-primary/55 sm:text-xs">Contact / 03</p>
           <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end">
             <div className="lg:col-span-9">
-              <GradientText
-                colors={['#090909', '#8F3028', '#C98C4B', '#090909']}
-                animationSpeed={3.6}
-                direction="horizontal"
-                pauseOnHover={false}
-                yoyo
-                showBorder={false}
-                className="contact-gradient-heading"
-              >
-                <h2 className="m-0 text-5xl font-extrabold leading-[0.88] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
-                  LET&apos;S BUILD SOMETHING MEMORABLE.
-                </h2>
-              </GradientText>
+              <h2 className="contact-space-mask m-0 text-5xl font-extrabold leading-[0.88] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
+                LET&apos;S BUILD SOMETHING MEMORABLE.
+              </h2>
             </div>
             <div className="lg:col-span-3">
-              <a href="mailto:hello@hamzaqady.com" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-[#090909] px-5 text-sm font-bold text-primary transition-transform active:scale-[.97]">Start a conversation <ArrowRight size={16} /></a>
+              <a href="mailto:hello@hamzaqady.com" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-primary px-5 text-sm font-bold text-[#090909] transition-transform active:scale-[.97]">Start a conversation <ArrowRight size={16} /></a>
             </div>
           </div>
         </div>
