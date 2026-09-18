@@ -171,13 +171,13 @@ function PortfolioRibbon() {
 function RotatingRole() {
   const roles = ['Visual Designer', 'Brand Designer', 'Frontend Developer', 'Creative Coder']
   const [index, setIndex] = useState(0)
-  const reduced = useReducedMotion()
+  const motionAllowed = useMotionAllowed()
 
   useEffect(() => {
-    if (reduced) return
+    if (!motionAllowed) return
     const timer = window.setInterval(() => setIndex((i) => (i + 1) % roles.length), 2200)
     return () => window.clearInterval(timer)
-  }, [reduced])
+  }, [motionAllowed])
 
   return (
     <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] sm:text-xs">
@@ -187,9 +187,9 @@ function RotatingRole() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={roles[index]}
-            initial={reduced ? false : { y: 18, opacity: 0, filter: 'blur(6px)' }}
+            initial={!motionAllowed ? false : { y: 18, opacity: 0, filter: 'blur(6px)' }}
             animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-            exit={reduced ? undefined : { y: -18, opacity: 0, filter: 'blur(6px)' }}
+            exit={!motionAllowed ? undefined : { y: -18, opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.45, ease }}
             className="inline-block whitespace-nowrap"
           >
