@@ -5,8 +5,10 @@ import RibbonGlow from './components/RibbonGlow'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
 import MaskedHeading from './components/MaskedHeading'
+import BorderGlow from './components/BorderGlow'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4'
+const HERO_IMAGE = `${import.meta.env.BASE_URL}hamza-astronaut.svg`
 const FEATURE_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4'
 
 const ease = [0.16, 1, 0.3, 1] as const
@@ -205,7 +207,7 @@ function Hero() {
   return (
     <section id="home" className="min-h-[100dvh] bg-transparent p-3 sm:p-4 md:p-6">
       <div className="relative min-h-[calc(100dvh-24px)] overflow-hidden rounded-[22px] bg-[#16130f] sm:min-h-[calc(100dvh-32px)] md:min-h-[calc(100dvh-48px)] md:rounded-[34px]">
-        <video className="absolute inset-0 h-full w-full object-cover" src={HERO_VIDEO} autoPlay loop muted playsInline />
+        <img className="absolute inset-0 h-full w-full object-cover" src={HERO_IMAGE} alt="Astronaut Hamza standing in a field of red flowers" fetchPriority="high" decoding="async" />
         <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.48] mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/5 to-black/80" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_64%_35%,rgba(233,190,128,0.10),transparent_30%)]" />
@@ -287,14 +289,28 @@ function Work() {
         </div>
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 lg:h-[520px]">
-          <motion.article whileHover={{ scale: 0.992 }} transition={{ duration: 0.35, ease }} className="group relative min-h-[380px] overflow-hidden rounded-[24px] md:min-h-[420px] lg:min-h-0 lg:col-span-1">
-            <video className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" src={FEATURE_VIDEO} autoPlay loop muted playsInline />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6">
-              <p className="text-sm text-[#E1E0CC]">Creative canvas.</p>
-              <p className="mt-1 text-xs text-primary/50">Motion study / Portfolio mood</p>
-            </div>
-          </motion.article>
+          <BorderGlow
+            className="min-h-[380px] md:min-h-[420px] lg:col-span-1 lg:h-full lg:min-h-0"
+            edgeSensitivity={26}
+            glowColor="8 88 58"
+            backgroundColor="#151513"
+            borderRadius={24}
+            glowRadius={30}
+            glowIntensity={0.9}
+            coneSpread={24}
+            animated
+            colors={['#ff4d3a', '#d0a96e', '#dedbc8']}
+            fillOpacity={0.2}
+          >
+            <motion.article whileHover={{ scale: 0.992 }} transition={{ duration: 0.35, ease }} className="group relative h-full min-h-[380px] overflow-hidden rounded-[23px] md:min-h-[420px] lg:min-h-0">
+              <video className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" src={FEATURE_VIDEO} autoPlay loop muted playsInline />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <p className="text-sm text-[#E1E0CC]">Creative canvas.</p>
+                <p className="mt-1 text-xs text-primary/50">Motion study / Portfolio mood</p>
+              </div>
+            </motion.article>
+          </BorderGlow>
 
           {projects.map((project, idx) => (
             <ProjectCard key={project.title} project={project} index={idx} />
@@ -315,13 +331,26 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
       : ['React interfaces', 'Motion studies', 'Interactive prototypes']
 
   return (
-    <motion.article
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.96, y: 20 }}
-      animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.12, ease }}
-      className="flex min-h-[380px] flex-col justify-between rounded-[24px] bg-[#20201d] p-6 md:min-h-[420px] lg:min-h-0"
+    <BorderGlow
+      className="min-h-[380px] md:min-h-[420px] lg:h-full lg:min-h-0"
+      edgeSensitivity={26}
+      glowColor="8 88 58"
+      backgroundColor="#20201d"
+      borderRadius={24}
+      glowRadius={28}
+      glowIntensity={0.8}
+      coneSpread={24}
+      animated={index === 0}
+      colors={['#ff4d3a', '#d0a96e', '#dedbc8']}
+      fillOpacity={0.16}
     >
+      <motion.article
+        ref={ref}
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, delay: index * 0.12, ease }}
+        className="flex h-full min-h-[380px] flex-col justify-between rounded-[23px] bg-[#20201d] p-6 md:min-h-[420px] lg:min-h-0"
+      >
       <div>
         <div className="mb-10 flex items-start justify-between">
           <span className="text-5xl font-light tracking-[-0.06em] text-primary/20">{project.meta}</span>
@@ -338,7 +367,8 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
           </div>
         ))}
       </div>
-    </motion.article>
+      </motion.article>
+    </BorderGlow>
   )
 }
 
