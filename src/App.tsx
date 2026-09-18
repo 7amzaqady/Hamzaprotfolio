@@ -155,11 +155,11 @@ function PortfolioGalaxy() {
             hueShift={28}
             disableAnimation={!motionAllowed}
             speed={0.55}
-            mouseInteraction={false}
+            mouseInteraction={motionAllowed}
             glowIntensity={0.24}
             saturation={0.42}
-            mouseRepulsion={false}
-            repulsionStrength={1.2}
+            mouseRepulsion
+            repulsionStrength={2.6}
             twinkleIntensity={0.24}
             rotationSpeed={0.025}
             autoCenterRepulsion={0}
