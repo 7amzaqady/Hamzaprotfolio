@@ -85,7 +85,7 @@ const SpecularButton = ({
   onClick,
   className = '',
   type = 'button'
-}) => {
+}: any) => {
   const btnRef = useRef(null);
   const fxRef = useRef(null);
   const propsRef = useRef({});
