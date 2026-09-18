@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import RibbonGlow from './components/RibbonGlow'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
+import MaskedHeading from './components/MaskedHeading'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4'
 const FEATURE_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4'
@@ -367,7 +368,29 @@ function Contact() {
         <div className="mx-auto max-w-[1400px]">
           <p className="text-[10px] uppercase tracking-[0.3em] opacity-60 sm:text-xs">Contact / 03</p>
           <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end">
-            <h2 className="text-5xl leading-[0.88] tracking-[-0.055em] sm:text-6xl md:text-7xl lg:col-span-9 lg:text-8xl xl:text-9xl">LET'S BUILD SOMETHING MEMORABLE.</h2>
+            <div className="lg:col-span-9">
+              <MaskedHeading
+                text="LET'S BUILD SOMETHING MEMORABLE."
+                tag="h2"
+                mediaType="video"
+                src={HERO_VIDEO}
+                fillScale={1.34}
+                parallax={34}
+                drift={14}
+                brightness={1.08}
+                saturation={0.88}
+                reveal="rise"
+                trigger="view"
+                duration={1.15}
+                stagger={0.08}
+                align="left"
+                weight={800}
+                tracking={-0.055}
+                lineHeight={0.88}
+                textScale={0.09}
+                className="min-h-[0.9em]"
+              />
+            </div>
             <div className="lg:col-span-3">
               <a href="mailto:hello@hamzaqady.com" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-[#090909] px-5 text-sm font-bold text-primary transition-transform active:scale-[.97]">Start a conversation <ArrowRight size={16} /></a>
             </div>
