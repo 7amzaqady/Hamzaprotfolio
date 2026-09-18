@@ -159,7 +159,7 @@ function AnimeScrambleBody({ text }: { text: string }) {
         seed: 42,
       }),
     })
-    return () => animation.cancel()
+    return () => { animation.cancel() }
   }, [inView, reduced, text])
 
   return <span ref={ref}>{text}</span>
