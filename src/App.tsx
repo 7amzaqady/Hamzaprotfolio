@@ -74,7 +74,7 @@ function FluidName() {
       <h1 className="text-[18vw] font-medium leading-[0.78] tracking-[-0.065em] text-[#E1E0CC] sm:text-[16vw] md:text-[13.5vw] lg:text-[10.5vw] xl:text-[9.7vw]">
         HAMZA
         <br />
-        QADY<span className="align-top text-[0.3em]">*</span>
+        QADY
       </h1>
     )
   }
@@ -88,7 +88,7 @@ function FluidName() {
       style={{ height: Math.round(fontSize * 1.62) }}
     >
       <FluidText
-        text={'HAMZA\nQADY*'}
+        text={'HAMZA\nQADY'}
         color="#E1E0CC"
         paletteColors={['#FFF9E8', '#F0D9A8', '#C98C4B']}
         splatRadius={16}
