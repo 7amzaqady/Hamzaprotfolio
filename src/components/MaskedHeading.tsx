@@ -6,7 +6,7 @@ const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 
 type MaskedHeadingProps = {
   text?: string;
-  tag?: keyof JSX.IntrinsicElements;
+  tag?: React.ElementType;
   mediaType?: 'image' | 'video';
   src?: string;
   poster?: string;
