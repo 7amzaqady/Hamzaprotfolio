@@ -7,7 +7,7 @@ import BorderGlow from './components/BorderGlow'
 import SpecularButton from './components/SpecularButton'
 import FlowingMenu from './components/FlowingMenu'
 
-const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
+const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`\nconst HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
 
 const Galaxy = lazy(() => import('./components/Galaxy'))
@@ -206,11 +206,30 @@ function RotatingRole() {
   )
 }
 
+function HeroBackgroundVideo() {
+  const [src, setSrc] = useState(HERO_VIDEO)
+
+  return (
+    <video
+      className="absolute inset-0 h-full w-full object-cover"
+      src={src}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      onError={() => {
+        if (src !== HERO_VIDEO_FALLBACK) setSrc(HERO_VIDEO_FALLBACK)
+      }}
+    />
+  )
+}
+
 function Hero() {
   return (
     <section id="home" className="min-h-[100dvh] bg-transparent p-3 sm:p-4 md:p-6">
       <div className="relative min-h-[calc(100dvh-24px)] overflow-hidden rounded-[22px] bg-[#16130f] sm:min-h-[calc(100dvh-32px)] md:min-h-[calc(100dvh-48px)] md:rounded-[34px]">
-        <video className="absolute inset-0 h-full w-full object-cover" src={HERO_VIDEO} autoPlay loop muted playsInline />
+        <HeroBackgroundVideo />
         <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.48] mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/5 to-black/80" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_64%_35%,rgba(233,190,128,0.10),transparent_30%)]" />
