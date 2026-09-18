@@ -11,6 +11,18 @@ const FEATURE_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOt
 
 const ease = [0.16, 1, 0.3, 1] as const
 
+function useMotionAllowed() {
+  const reduced = useReducedMotion()
+  const [forced, setForced] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setForced(params.get('motion') === '1')
+  }, [])
+
+  return !reduced || forced
+}
+
 function WordsPullUp({ text, className = '' }: { text: string; className?: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
@@ -53,10 +65,10 @@ function useFluidTitleSize() {
 }
 
 function FluidName() {
-  const reduced = useReducedMotion()
+  const motionAllowed = useMotionAllowed()
   const fontSize = useFluidTitleSize()
 
-  if (reduced) {
+  if (!motionAllowed) {
     return (
       <h1 className="text-[18vw] font-medium leading-[0.78] tracking-[-0.065em] text-[#E1E0CC] sm:text-[16vw] md:text-[13.5vw] lg:text-[10.5vw] xl:text-[9.7vw]">
         HAMZA
@@ -77,11 +89,11 @@ function FluidName() {
       <FluidText
         text={'HAMZA\nQADY*'}
         color="#E1E0CC"
-        paletteColors={['#FFF9E8', '#E1E0CC', '#D0A96E']}
-        splatRadius={9}
-        splatForce={13}
-        curl={52}
-        densityDissipation={3.2}
+        paletteColors={['#FFF9E8', '#F0D9A8', '#C98C4B']}
+        splatRadius={16}
+        splatForce={22}
+        curl={70}
+        densityDissipation={2.1}
         font={{
           fontFamily: 'Almarai',
           fontWeight: 500,
@@ -96,9 +108,9 @@ function FluidName() {
 }
 
 function AboutGlitchLine({ text, serif = false }: { text: string; serif?: boolean }) {
-  const reduced = useReducedMotion()
+  const motionAllowed = useMotionAllowed()
 
-  if (reduced) {
+  if (!motionAllowed) {
     return <span>{text}</span>
   }
 
@@ -118,7 +130,7 @@ function AboutGlitchLine({ text, serif = false }: { text: string; serif?: boolea
       enterAnimation={{
         mode: 'oneLine',
         restState: 'solid',
-        replay: false,
+        replay: true,
         position: 'above',
         scrambleIntensity: 100,
         ease: { type: 'tween', duration: 1.8, ease: [0.16, 1, 0.3, 1] },
@@ -142,11 +154,11 @@ function AboutGlitchLine({ text, serif = false }: { text: string; serif?: boolea
 function AnimeScrambleBody({ text }: { text: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
-  const reduced = useReducedMotion()
+  const motionAllowed = useMotionAllowed()
 
   useEffect(() => {
     const el = ref.current
-    if (!el || !inView || reduced) return
+    if (!el || !inView || !motionAllowed) return
     const animation = animate(el, {
       innerHTML: scrambleText({
         text,
@@ -160,18 +172,18 @@ function AnimeScrambleBody({ text }: { text: string }) {
       }),
     })
     return () => { animation.cancel() }
-  }, [inView, reduced, text])
+  }, [inView, motionAllowed, text])
 
   return <span ref={ref}>{text}</span>
 }
 
 function PortfolioRibbon() {
-  const reduced = useReducedMotion()
+  const motionAllowed = useMotionAllowed()
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 z-[5] overflow-hidden opacity-60 mix-blend-screen" aria-hidden="true">
       <div className="ribbon-glow-fallback absolute inset-0" />
-      {!reduced && (
+      {motionAllowed && (
         <RibbonGlow
           background="#090909"
           color1="#2A261A"
