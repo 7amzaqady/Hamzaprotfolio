@@ -77,11 +77,11 @@ function FluidName() {
       <FluidText
         text={'HAMZA\nQADY*'}
         color="#E1E0CC"
-        paletteColors={['#E1E0CC', '#D8C7A5', '#A98E68']}
-        splatRadius={5}
-        splatForce={7}
-        curl={34}
-        densityDissipation={5}
+        paletteColors={['#FFF9E8', '#E1E0CC', '#D0A96E']}
+        splatRadius={9}
+        splatForce={13}
+        curl={52}
+        densityDissipation={3.2}
         font={{
           fontFamily: 'Almarai',
           fontWeight: 500,
@@ -120,16 +120,16 @@ function AboutGlitchLine({ text, serif = false }: { text: string; serif?: boolea
         restState: 'solid',
         replay: false,
         position: 'above',
-        scrambleIntensity: 68,
-        ease: { type: 'tween', duration: 1.25, ease: [0.16, 1, 0.3, 1] },
+        scrambleIntensity: 100,
+        ease: { type: 'tween', duration: 1.8, ease: [0.16, 1, 0.3, 1] },
         flickerEnabled: false,
       }}
       hoverAnimation={{
-        type: 'diffusion',
+        type: 'wave',
         lines: 'oneLine',
-        radius: 2,
+        radius: 5,
         collapse: true,
-        collapseTime: 0.45,
+        collapseTime: 0.7,
         glitchChars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
         glitchShuffle: true,
         flickerEnabled: false,
@@ -152,10 +152,10 @@ function AnimeScrambleBody({ text }: { text: string }) {
         text,
         chars: 'uppercase',
         override: '_',
-        revealRate: 42,
-        settleRate: 26,
-        settleDuration: 420,
-        perturbation: 0.35,
+        revealRate: 24,
+        settleRate: 18,
+        settleDuration: 900,
+        perturbation: 0.65,
         seed: 42,
       }),
     })
@@ -174,13 +174,13 @@ function PortfolioRibbon() {
       {!reduced && (
         <RibbonGlow
           background="#090909"
-          color1="#171812"
-          color2="#3A3025"
-          speed={34}
-          size={108}
+          color1="#2A261A"
+          color2="#6A4D2C"
+          speed={52}
+          size={132}
           angle={-165}
-          hover={78}
-          reach={320}
+          hover={96}
+          reach={420}
           style={{
             position: 'absolute',
             inset: 0,
@@ -278,7 +278,7 @@ function About() {
 
   return (
     <section id="about" className="bg-transparent px-3 py-8 sm:px-4 md:px-6 md:py-12">
-      <div className="mx-auto max-w-[1400px] rounded-[28px] bg-[#11110f]/95 px-6 py-20 text-center backdrop-blur-[2px] sm:px-10 md:px-16 md:py-28 lg:px-24 lg:py-36">
+      <div className="mx-auto max-w-[1400px] rounded-[28px] bg-[#11110f]/88 px-6 py-20 text-center backdrop-blur-[2px] sm:px-10 md:px-16 md:py-28 lg:px-24 lg:py-36">
         <p className="mb-8 text-[10px] uppercase tracking-[0.32em] text-primary/60 sm:text-xs">About / 01</p>
         <div className="mx-auto max-w-5xl text-3xl leading-[0.96] text-[#E1E0CC] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
           <div className="scramble-line"><AboutGlitchLine text="I am Hamza Qady," /></div>
