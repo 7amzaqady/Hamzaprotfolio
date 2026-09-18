@@ -17,6 +17,7 @@
     "framer-motion": "latest",
     "gsap": "^3.13.0",
     "lucide-react": "latest",
+    "motion": "latest",
     "react": "latest",
     "react-dom": "latest",
     "animejs": "^4.4.0"
