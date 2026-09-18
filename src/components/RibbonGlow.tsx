@@ -1,243 +1,471 @@
-import { useEffect, useRef } from 'react'
+// Ribbon Glow — Originkit
 
-const vertexShaderSource = `#version 300 es
-in vec2 a_position;
-out vec2 v_uv;
-void main() {
-  v_uv = a_position * 0.5 + 0.5;
-  gl_Position = vec4(a_position, 0.0, 1.0);
-}`
+"use client"
 
-const fragmentShaderSource = `#version 300 es
+import * as React from "react"
+import { useEffect, useRef } from "react"
+
+const MAX_DPR = 2
+const NAME = "RibbonGlow"
+
+const LAYERS = 84
+const TWIST = 1.25
+const DRAG = 0.18
+
+const VERT_SRC = `#version 300 es
+const vec2 P[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
+void main() { gl_Position = vec4(P[gl_VertexID], 0.0, 1.0); }
+`
+
+const FIELD_SRC = `#version 300 es
 precision highp float;
+uniform vec2 uRes;
+uniform float uTime;
+uniform vec3 uC1;
+uniform vec3 uC2;
+uniform float uSize;
+uniform float uAngle;
+uniform vec2 uMouse;
+uniform float uOn;
+uniform float uReach;
+uniform vec2 uVel;
+out vec4 o;
 
-in vec2 v_uv;
-out vec4 outColor;
+const float TAU = 6.28318530718;
+const float LAYERS = ${LAYERS.toFixed(1)};
+const float TWIST = ${TWIST.toFixed(3)};
+const float DRAG = ${DRAG.toFixed(3)};
+const float GAIN = 0.62;
+const vec2 CENTRE = vec2(-0.62, 0.24);
+const float TILT = 0.6;
+const float ZOOM = 1.05;
+const float THETA = 2.13;
+const float SHEAR = 0.963;
+const float SHRINK = 0.953;
+const vec2 WARP_FREQ = vec2(0.42, 2.4);
+const vec2 WARP_AMP = vec2(0.13, 0.027);
+const vec2 ASPECT = vec2(2.1, 0.17);
+const float OFFSET = 0.36;
+const float GLOW = 0.0021;
+const float SOFT = 0.0019;
+const float FALLOFF = 0.37;
+const float PHASE = 12.0;
+const float CYCLE = 0.16;
+const float HUE_TRAVEL = 2.0;
 
-uniform vec2 u_resolution;
-uniform vec2 u_pointer;
-uniform vec2 u_velocity;
-uniform float u_time;
-uniform float u_presence;
-uniform float u_reduced;
-
-vec3 palette(float t) {
-  vec3 a = vec3(0.87, 0.86, 0.78); // cream
-  vec3 b = vec3(0.92, 0.70, 0.42); // warm gold
-  vec3 c = vec3(0.64, 0.43, 0.25); // bronze
-  float m = 0.5 + 0.5 * sin(t * 2.7);
-  return mix(a, mix(b, c, 0.35 + 0.3 * sin(t * 1.3)), m);
-}
+mat2 rot(float a) { float c = cos(a), s = sin(a); return mat2(c, s, -s, c); }
 
 void main() {
-  vec2 uv = v_uv;
-  vec2 p = (uv * 2.0 - 1.0);
-  p.x *= u_resolution.x / max(u_resolution.y, 1.0);
+  vec2 R = uRes;
+  vec2 pos = (gl_FragCoord.xy - 0.5 * R) / R.y;
 
-  vec2 mp = (u_pointer * 2.0 - 1.0);
-  mp.x *= u_resolution.x / max(u_resolution.y, 1.0);
+  vec2 d = pos - uMouse;
+  float w = uOn * exp(-dot(d, d) / (uReach * uReach));
+  if (w > 1e-4) pos = uMouse + rot(w * TWIST) * d * (1.0 - 0.3 * min(w, 1.0)) - uVel * min(w, 1.0) * DRAG;
 
-  float t = u_time * mix(0.0, 0.16, 1.0 - u_reduced);
-  vec2 toMouse = p - mp;
-  float dMouse = length(toMouse);
-  float influence = exp(-dMouse * 2.25) * u_presence;
-  float twist = (u_velocity.x * toMouse.y - u_velocity.y * toMouse.x) * 0.035 * influence;
+  pos = rot(uAngle) * pos / uSize;
+  float t = uTime * 0.49 + PHASE;
+  float breath = (-sin(uTime * 0.735) + sin(uTime * 0.49 + 1.0)) * 0.25 + 0.5;
+  vec2 u = rot(TILT) * ((pos - CENTRE) * (ZOOM - breath * 0.085));
+  mat2 fold = mat2(cos(THETA), sin(THETA), -SHEAR, cos(THETA));
 
-  float angle = -3.14159265 + 0.20 * sin(t * 0.4) + twist;
-  mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-  vec2 q = rot * (p + vec2(0.0, -0.02));
-  q += u_velocity * 0.016 * influence;
-
-  vec3 accum = vec3(0.0);
-  float glow = 0.0;
-
-  // 84 folded ribbon layers, inspired by OriginKit's Ribbon Glow field.
-  for (int i = 0; i < 84; i++) {
-    float fi = float(i);
-    float phase = fi * 0.145;
-    float spread = (fi - 41.5) / 41.5;
-
-    vec2 r = q;
-    r.x += 0.23 * sin(r.y * 1.75 + phase + t * 0.75);
-    r.y += 0.16 * sin(r.x * 2.1 - phase * 0.72 - t * 0.52);
-
-    // shear + fold
-    r.x += r.y * (0.10 + 0.08 * sin(phase));
-    float fold = abs(r.y + spread * 0.48 + 0.22 * sin(r.x * 1.52 + phase + t));
-    float width = 0.010 + 0.004 * sin(phase * 1.7);
-    float band = width / (fold * fold + width * 0.65);
-
-    float envelope = exp(-abs(spread) * 1.75);
-    float pulse = 0.72 + 0.28 * sin(phase * 2.0 + t * 0.9);
-    float layer = band * envelope * pulse * 0.00115;
-
-    vec3 c = palette(phase + r.x * 0.35 + t * 0.18);
-    accum += c * layer;
-    glow += layer;
+  vec3 col = vec3(0.0);
+  for (float i = 1.0; i <= LAYERS; i += 1.0) {
+    u.x -= sin(u.y * WARP_FREQ.x + t + i * 0.007) * WARP_AMP.x;
+    u.y -= sin(u.x * WARP_FREQ.y - t + i * 0.02) * WARP_AMP.y;
+    u = fold * u * SHRINK;
+    vec2 q = (u - vec2(OFFSET + breath * 0.1, 0.0)) * ASPECT;
+    float g = GLOW / (dot(q, q) + SOFT) * (0.25 + breath * 0.4);
+    float r = length(u);
+    float k = sin(i * CYCLE + t * 1.2 + r * HUE_TRAVEL) * 0.5 + 0.5;
+    col += g * mix(uC1, uC2, k) * (0.62 + 0.5 * k) * exp2(-r * FALLOFF);
   }
+  vec3 x = max(col * GAIN, 0.0);
+  col = (x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14);
+  col = pow(clamp(col, 0.0, 1.0), vec3(0.85, 0.92, 0.98));
+  col *= 1.0 - smoothstep(0.5, 1.6, length(pos)) * 0.07;
+  o = vec4(col, 1.0);
+}
+`
 
-  // Warm pointer bloom and soft vignette.
-  float pointerBloom = exp(-dMouse * 3.0) * influence * 0.12;
-  accum += vec3(0.95, 0.77, 0.48) * pointerBloom;
+const FINISH_SRC = `#version 300 es
+precision highp float;
+uniform sampler2D uField;
+uniform vec2 uRes;
+uniform float uTime;
+uniform vec3 uBg;
+uniform float uPaper;
+out vec4 o;
 
-  float vignette = smoothstep(1.45, 0.32, length(p * vec2(0.78, 1.0)));
-  accum *= 0.60 + 0.40 * vignette;
+float ign(vec2 p, float f) { p += 5.588238 * mod(f, 64.0); return fract(52.9829189 * fract(0.06711056 * p.x + 0.00583715 * p.y)); }
 
-  // ACES-ish compression + gamma, plus tiny interleaved dither.
-  accum = accum / (vec3(1.0) + accum);
-  accum = pow(max(accum, vec3(0.0)), vec3(0.82));
-  float dither = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) / 255.0;
-  accum += dither;
+void main() {
+  vec2 frag = gl_FragCoord.xy;
+  vec3 L = max(texture(uField, frag / uRes).rgb, 0.0);
 
-  float alpha = clamp((accum.r + accum.g + accum.b) * 0.17, 0.0, 0.48);
-  outColor = vec4(accum, alpha);
-}`
+  vec3 dark = uBg + L * (1.0 - uBg);
+  float strength = clamp(max(L.r, max(L.g, L.b)), 0.0, 1.0);
+  vec3 paper = uBg * (1.0 - strength) + L * 0.96;
+  vec3 col = mix(dark, paper, uPaper);
+  col += (ign(frag, floor(uTime * 24.0)) - 0.5) / 255.0;
+  o = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
+`
 
-function compileShader(gl: WebGL2RenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type)
-  if (!shader) return null
-  gl.shaderSource(shader, source)
-  gl.compileShader(shader)
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.warn('RibbonGlow shader error:', gl.getShaderInfoLog(shader))
-    gl.deleteShader(shader)
-    return null
-  }
-  return shader
+type RGB = [number, number, number]
+
+const colorCache = new Map<string, RGB | null>()
+
+function parseColor(input: string | undefined): RGB | null {
+    if (!input) return null
+    const key = String(input)
+    if (colorCache.has(key)) return colorCache.get(key) ?? null
+    let s = key.trim()
+    const v = s.match(/^var\(\s*--[^,]+,\s*(.+)\)$/)
+    if (v) s = v[1].trim()
+    let out: RGB | null = null
+    if (s.charAt(0) === "#") {
+        let h = s.slice(1)
+        if (h.length === 3 || h.length === 4) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2]
+        if (h.length >= 6) {
+            const r = parseInt(h.slice(0, 2), 16)
+            const g = parseInt(h.slice(2, 4), 16)
+            const b = parseInt(h.slice(4, 6), 16)
+            if (Number.isFinite(r) && Number.isFinite(g) && Number.isFinite(b)) out = [r / 255, g / 255, b / 255]
+        }
+    } else {
+        const m = s.match(/^(rgba?|hsla?)\(([^)]*)\)/i)
+        if (m) {
+            const parts = m[2].split(/[\s,/]+/).filter(Boolean)
+            const f = (i: number) => parseFloat(parts[i])
+            if (parts.length >= 3 && [0, 1, 2].every((i) => Number.isFinite(f(i)))) {
+                if (m[1].toLowerCase().startsWith("rgb")) {
+                    const ch = (i: number) => (parts[i].endsWith("%") ? f(i) / 100 : f(i) / 255)
+                    out = [ch(0), ch(1), ch(2)]
+                } else {
+                    const hh = (((f(0) % 360) + 360) % 360) / 360
+                    const ss = f(1) / 100
+                    const ll = f(2) / 100
+                    const q = ll < 0.5 ? ll * (1 + ss) : ll + ss - ll * ss
+                    const p = 2 * ll - q
+                    const hue = (t: number) => {
+                        t = t < 0 ? t + 1 : t > 1 ? t - 1 : t
+                        if (t < 1 / 6) return p + (q - p) * 6 * t
+                        if (t < 1 / 2) return q
+                        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+                        return p
+                    }
+                    out = [hue(hh + 1 / 3), hue(hh), hue(hh - 1 / 3)]
+                }
+                out = out.map((c) => Math.min(1, Math.max(0, c))) as RGB
+            }
+        }
+    }
+    colorCache.set(key, out)
+    return out
 }
 
-export function RibbonGlow() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+function color(input: string | undefined, fallback: string): RGB {
+    return parseColor(input) ?? (parseColor(fallback) as RGB)
+}
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+function num(v: unknown, fb: number): number {
+    return typeof v === "number" && isFinite(v) ? v : fb
+}
 
-    const gl = canvas.getContext('webgl2', {
-      alpha: true,
-      antialias: false,
-      premultipliedAlpha: false,
-      powerPreference: 'high-performance',
-    })
-    if (!gl) return
+function clampN(v: number, lo: number, hi: number): number {
+    return v < lo ? lo : v > hi ? hi : v
+}
 
-    const vs = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource)
-    const fs = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource)
-    if (!vs || !fs) return
+function link(gl: WebGL2RenderingContext, frag: string, label: string): WebGLProgram | null {
+    const shader = (type: number, src: string) => {
+        const sh = gl.createShader(type)
+        if (!sh) return null
+        gl.shaderSource(sh, src)
+        gl.compileShader(sh)
+        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+            console.error(`${NAME} ${label} shader:`, gl.getShaderInfoLog(sh))
+            gl.deleteShader(sh)
+            return null
+        }
+        return sh
+    }
+    const vs = shader(gl.VERTEX_SHADER, VERT_SRC)
+    const fs = shader(gl.FRAGMENT_SHADER, frag)
+    if (!vs || !fs) return null
+    const prog = gl.createProgram()
+    if (!prog) return null
+    gl.attachShader(prog, vs)
+    gl.attachShader(prog, fs)
+    gl.linkProgram(prog)
+    gl.deleteShader(vs)
+    gl.deleteShader(fs)
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        console.error(`${NAME} ${label} link:`, gl.getProgramInfoLog(prog))
+        gl.deleteProgram(prog)
+        return null
+    }
+    return prog
+}
 
-    const program = gl.createProgram()
-    if (!program) return
-    gl.attachShader(program, vs)
-    gl.attachShader(program, fs)
-    gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.warn('RibbonGlow program error:', gl.getProgramInfoLog(program))
-      return
+function locations(gl: WebGL2RenderingContext, prog: WebGLProgram, names: string[]) {
+    const out: Record<string, WebGLUniformLocation | null> = {}
+    for (const n of names) out[n] = gl.getUniformLocation(prog, n)
+    return out
+}
+
+function fieldTarget(gl: WebGL2RenderingContext) {
+    const fbo = gl.createFramebuffer()
+    let tex: WebGLTexture | null = null
+    let w = 0
+    let h = 0
+    let half = !!gl.getExtension("EXT_color_buffer_float")
+    return {
+        fbo,
+        texture: () => tex,
+        width: () => w,
+        height: () => h,
+        resize(nw: number, nh: number) {
+            if (nw === w && nh === h && tex) return
+            for (let attempt = 0; attempt < 2; attempt++) {
+                if (tex) gl.deleteTexture(tex)
+                tex = gl.createTexture()
+                gl.bindTexture(gl.TEXTURE_2D, tex)
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+                gl.texImage2D(gl.TEXTURE_2D, 0, half ? gl.RGBA16F : gl.RGBA8, nw, nh, 0, gl.RGBA, half ? gl.HALF_FLOAT : gl.UNSIGNED_BYTE, null)
+                gl.bindFramebuffer(gl.FRAMEBUFFER, fbo)
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0)
+                const ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+                if (ok || !half) break
+                half = false
+            }
+            w = nw
+            h = nh
+        },
+        dispose() {
+            if (tex) gl.deleteTexture(tex)
+            gl.deleteFramebuffer(fbo)
+        },
+    }
+}
+
+function trackPointer(root: HTMLElement) {
+    const p = { tx: 0, ty: 0, inside: false, seen: false }
+    const read = (e: PointerEvent) => {
+        const r = root.getBoundingClientRect()
+        const sx = root.offsetWidth / (r.width || 1)
+        const sy = root.offsetHeight / (r.height || 1)
+        p.tx = (e.clientX - r.left) * sx
+        p.ty = (e.clientY - r.top) * sy
+        p.inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom
+        p.seen = true
+    }
+    const out = (e: PointerEvent) => {
+        if (!e.relatedTarget) p.inside = false
+    }
+    window.addEventListener("pointermove", read, { passive: true })
+    window.addEventListener("pointerdown", read, { passive: true })
+    document.addEventListener("pointerout", out)
+    return {
+        p,
+        dispose() {
+            window.removeEventListener("pointermove", read)
+            window.removeEventListener("pointerdown", read)
+            document.removeEventListener("pointerout", out)
+        },
+    }
+}
+
+const DEFAULTS = {
+    background: "#0B0A10",
+    color1: "#031215",
+    color2: "#231F34",
+}
+
+interface RibbonGlowProps {
+    style?: React.CSSProperties
+    background?: string
+    color1?: string
+    color2?: string
+    speed?: number
+    size?: number
+    angle?: number
+    hover?: number
+    reach?: number
+    width?: number
+    height?: number
+}
+
+function __OriginkitBase_RibbonGlow(props: RibbonGlowProps) {
+    const {
+        style,
+        background = DEFAULTS.background,
+        color1 = DEFAULTS.color1,
+        color2 = DEFAULTS.color2,
+        speed = 50,
+        size = 100,
+        angle = -180,
+        hover = 100,
+        reach = 240,
+        width,
+        height,
+    } = props
+
+    const rootRef = useRef<HTMLDivElement>(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+
+    const vRef = useRef({ background, color1, color2, speed: 1, size: 1, angle: 0, hover: 1, reach: 240 })
+    vRef.current = {
+        background,
+        color1,
+        color2,
+
+        speed: clampN(num(speed, 50), 0, 100) / 50,
+        size: clampN(num(size, 100), 50, 200) / 100,
+
+        angle: (clampN(num(angle, 0), -180, 180) * Math.PI) / 180,
+        hover: clampN(num(hover, 100), 0, 200) / 100,
+        reach: clampN(num(reach, 240), 10, 800),
     }
 
-    const position = gl.getAttribLocation(program, 'a_position')
-    const buffer = gl.createBuffer()
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 3, -1, -1, 3]),
-      gl.STATIC_DRAW,
+    useEffect(() => {
+        const canvas = canvasRef.current
+        const root = rootRef.current
+        if (!canvas || !root) return
+        const gl = canvas.getContext("webgl2", { antialias: false, alpha: false, depth: false, stencil: false })
+        if (!gl) {
+            console.error(`${NAME}: WebGL2 unavailable`)
+            return
+        }
+        const field = link(gl, FIELD_SRC, "field")
+        const finish = link(gl, FINISH_SRC, "finish")
+        if (!field || !finish) return
+        const uf = locations(gl, field, ["uRes", "uTime", "uC1", "uC2", "uSize", "uAngle", "uMouse", "uOn", "uReach", "uVel"])
+        const un = locations(gl, finish, ["uField", "uRes", "uTime", "uBg", "uPaper"])
+        const vao = gl.createVertexArray()
+        gl.bindVertexArray(vao)
+        const target = fieldTarget(gl)
+        const pointer = trackPointer(root)
+        const ptr = pointer.p
+
+        let mx = 0
+        let my = 0
+        let vx = 0
+        let vy = 0
+        let on = 0
+        let raf = 0
+        let last = -1
+        let clock = 0
+
+        const render = (now: number) => {
+            raf = requestAnimationFrame(render)
+            const dt = last < 0 ? 0 : clampN((now - last) / 1000, 0, 0.05)
+            last = now
+            const v = vRef.current
+            clock = (clock + dt * v.speed) % 3600
+
+            const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
+            const cw = canvas.clientWidth || 1200
+            const ch = canvas.clientHeight || 800
+            const bw = Math.max(1, Math.round(cw * dpr))
+            const bh = Math.max(1, Math.round(ch * dpr))
+            if (canvas.width !== bw || canvas.height !== bh) {
+                canvas.width = bw
+                canvas.height = bh
+            }
+            target.resize(Math.max(1, Math.round(bw / 2)), Math.max(1, Math.round(bh / 2)))
+
+            const present = ptr.inside ? 1 : 0
+            if (present && on < 0.02) {
+                mx = ptr.tx
+                my = ptr.ty
+            }
+            on += (present - on) * (1 - Math.exp(-dt * 5))
+            const k = 1 - Math.exp(-dt * 16)
+            const nx = mx + (ptr.tx - mx) * k
+            const ny = my + (ptr.ty - my) * k
+            if (dt > 0) {
+                const kv = 1 - Math.exp(-dt * 8)
+                vx += ((nx - mx) / dt - vx) * kv
+                vy += ((ny - my) / dt - vy) * kv
+            }
+            mx = nx
+            my = ny
+            const vLen = Math.hypot(vx, vy) / ch
+            const vCap = vLen > 3 ? 3 / vLen : 1
+
+            const c1 = color(v.color1, DEFAULTS.color1)
+            const c2 = color(v.color2, DEFAULTS.color2)
+            const bg = color(v.background, DEFAULTS.background)
+            const bgLum = 0.2126 * bg[0] + 0.7152 * bg[1] + 0.0722 * bg[2]
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo)
+            gl.viewport(0, 0, target.width(), target.height())
+            gl.useProgram(field)
+            gl.uniform2f(uf.uRes, target.width(), target.height())
+            gl.uniform1f(uf.uTime, clock)
+            gl.uniform3f(uf.uC1, c1[0], c1[1], c1[2])
+            gl.uniform3f(uf.uC2, c2[0], c2[1], c2[2])
+            gl.uniform1f(uf.uSize, v.size)
+            gl.uniform1f(uf.uAngle, v.angle)
+            gl.uniform2f(uf.uMouse, (mx - cw / 2) / ch, (ch / 2 - my) / ch)
+            gl.uniform1f(uf.uOn, on * v.hover)
+            gl.uniform1f(uf.uReach, v.reach / ch)
+            gl.uniform2f(uf.uVel, (vx / ch) * vCap, (-vy / ch) * vCap)
+            gl.drawArrays(gl.TRIANGLES, 0, 3)
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+            gl.viewport(0, 0, bw, bh)
+            gl.useProgram(finish)
+            gl.activeTexture(gl.TEXTURE0)
+            gl.bindTexture(gl.TEXTURE_2D, target.texture())
+            gl.uniform1i(un.uField, 0)
+            gl.uniform2f(un.uRes, bw, bh)
+            gl.uniform1f(un.uTime, clock)
+            gl.uniform3f(un.uBg, bg[0], bg[1], bg[2])
+            gl.uniform1f(un.uPaper, clampN((bgLum - 0.35) / 0.3, 0, 1))
+            gl.drawArrays(gl.TRIANGLES, 0, 3)
+        }
+
+        raf = requestAnimationFrame(render)
+        return () => {
+            cancelAnimationFrame(raf)
+            pointer.dispose()
+            target.dispose()
+            gl.deleteVertexArray(vao)
+            gl.deleteProgram(field)
+            gl.deleteProgram(finish)
+        }
+    }, [])
+
+    return (
+        <div
+            ref={rootRef}
+            style={{
+                position: "relative",
+                overflow: "hidden",
+                background,
+                minWidth: 1200,
+                minHeight: 800,
+                width: typeof width === "number" && width > 0 ? width : "100%",
+                height: typeof height === "number" && height > 0 ? height : "100%",
+                ...style,
+            }}
+        >
+            <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }} />
+        </div>
     )
+}
 
-    const uResolution = gl.getUniformLocation(program, 'u_resolution')
-    const uPointer = gl.getUniformLocation(program, 'u_pointer')
-    const uVelocity = gl.getUniformLocation(program, 'u_velocity')
-    const uTime = gl.getUniformLocation(program, 'u_time')
-    const uPresence = gl.getUniformLocation(program, 'u_presence')
-    const uReduced = gl.getUniformLocation(program, 'u_reduced')
+const __originkitPresetProps = {
+  "color1": "#031215",
+  "color2": "#231F34"
+};
 
-    const pointer = { x: 0.62, y: 0.40 }
-    const targetPointer = { ...pointer }
-    const velocity = { x: 0, y: 0 }
-    const targetVelocity = { x: 0, y: 0 }
-    let presence = 0.32
-    let targetPresence = 0.32
-    let lastX = pointer.x
-    let lastY = pointer.y
-    let raf = 0
-    const start = performance.now()
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-    const resize = () => {
-      // Quarter-pixel cost: half-resolution field, CSS upsamples bilinearly.
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.25)
-      const scale = window.innerWidth < 768 ? 0.42 : 0.52
-      canvas.width = Math.max(1, Math.floor(window.innerWidth * dpr * scale))
-      canvas.height = Math.max(1, Math.floor(window.innerHeight * dpr * scale))
-      gl.viewport(0, 0, canvas.width, canvas.height)
-    }
-
-    const onPointerMove = (event: PointerEvent) => {
-      const nx = event.clientX / Math.max(window.innerWidth, 1)
-      const ny = 1 - event.clientY / Math.max(window.innerHeight, 1)
-      targetVelocity.x = (nx - lastX) * 18
-      targetVelocity.y = (ny - lastY) * 18
-      targetPointer.x = nx
-      targetPointer.y = ny
-      lastX = nx
-      lastY = ny
-      targetPresence = 1
-    }
-    const onPointerLeave = () => { targetPresence = 0.25 }
-
-    window.addEventListener('resize', resize)
-    window.addEventListener('pointermove', onPointerMove, { passive: true })
-    document.documentElement.addEventListener('pointerleave', onPointerLeave)
-    resize()
-
-    const render = (now: number) => {
-      const reduced = media.matches ? 1 : 0
-      pointer.x += (targetPointer.x - pointer.x) * 0.055
-      pointer.y += (targetPointer.y - pointer.y) * 0.055
-      velocity.x += (targetVelocity.x - velocity.x) * 0.08
-      velocity.y += (targetVelocity.y - velocity.y) * 0.08
-      targetVelocity.x *= 0.90
-      targetVelocity.y *= 0.90
-      presence += (targetPresence - presence) * 0.035
-
-      gl.useProgram(program)
-      gl.enableVertexAttribArray(position)
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-      gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
-      gl.uniform2f(uResolution, canvas.width, canvas.height)
-      gl.uniform2f(uPointer, pointer.x, pointer.y)
-      gl.uniform2f(uVelocity, velocity.x, velocity.y)
-      gl.uniform1f(uTime, (now - start) / 1000)
-      gl.uniform1f(uPresence, presence)
-      gl.uniform1f(uReduced, reduced)
-      gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
-      gl.drawArrays(gl.TRIANGLES, 0, 3)
-
-      raf = requestAnimationFrame(render)
-    }
-    raf = requestAnimationFrame(render)
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('resize', resize)
-      window.removeEventListener('pointermove', onPointerMove)
-      document.documentElement.removeEventListener('pointerleave', onPointerLeave)
-      gl.deleteProgram(program)
-      gl.deleteShader(vs)
-      gl.deleteShader(fs)
-      if (buffer) gl.deleteBuffer(buffer)
-    }
-  }, [])
-
-  return (
-    <>
-      <div aria-hidden="true" className="ribbon-glow-fallback pointer-events-none fixed inset-0 z-[29]" />
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="ribbon-glow pointer-events-none fixed inset-0 z-[30] h-[100dvh] w-screen"
-      />
-    </>
-  )
+export default function RibbonGlow(props: Record<string, unknown>) {
+  return <__OriginkitBase_RibbonGlow {...(__originkitPresetProps as Record<string, unknown>)} {...props} />;
 }
