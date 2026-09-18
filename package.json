@@ -1,0 +1,31 @@
+{
+  "name": "hamza-prisma-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "add:ribbon-glow": "bunx --bun originkit@latest add ribbon-glow",
+    "add:ribbon-glow:npm": "npx originkit@latest add ribbon-glow",
+    "add:fluid-text": "bunx --bun originkit@latest add fluid-text",
+    "add:fluid-text:npm": "npx originkit@latest add fluid-text"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "framer-motion": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "postcss": "latest",
+    "tailwindcss": "3.4.17",
+    "typescript": "latest",
+    "vite": "latest"
+  }
+}
