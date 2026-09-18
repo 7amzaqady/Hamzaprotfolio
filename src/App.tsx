@@ -1,14 +1,15 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { ArrowDownRight, ArrowRight, Check } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import RibbonGlow from './components/RibbonGlow'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
 import GradientText from './components/GradientText'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
-const FEATURE_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260406_133058_0504132a-0cf3-4450-a370-8ea3b05c95d4.mp4'
+const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
+
+const Galaxy = lazy(() => import('./components/Galaxy'))
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -139,32 +140,34 @@ function AboutMaskLine({ text, serif = false, delay = 0 }: { text: string; serif
   )
 }
 
-function PortfolioRibbon() {
+function PortfolioGalaxy() {
   const motionAllowed = useMotionAllowed()
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[5] overflow-hidden opacity-60 mix-blend-screen" aria-hidden="true">
-      <div className="ribbon-glow-fallback absolute inset-0" />
-      {motionAllowed && (
-        <RibbonGlow
-          background="#090909"
-          color1="#2A261A"
-          color2="#6A4D2C"
-          speed={52}
-          size={132}
-          angle={-165}
-          hover={96}
-          reach={420}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            minWidth: '100%',
-            minHeight: '100%',
-          }}
-        />
-      )}
+    <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden bg-[#090909]" aria-hidden="true">
+      <div className="absolute inset-0 opacity-[0.56]">
+        <Suspense fallback={null}>
+          <Galaxy
+            focal={[0.5, 0.5]}
+            rotation={[1.0, 0.0]}
+            starSpeed={0.34}
+            density={0.9}
+            hueShift={28}
+            disableAnimation={!motionAllowed}
+            speed={0.55}
+            mouseInteraction={false}
+            glowIntensity={0.24}
+            saturation={0.42}
+            mouseRepulsion={false}
+            repulsionStrength={1.2}
+            twinkleIntensity={0.24}
+            rotationSpeed={0.025}
+            autoCenterRepulsion={0}
+            transparent
+          />
+        </Suspense>
+      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,rgba(9,9,9,.14)_52%,rgba(9,9,9,.62)_100%)]" />
     </div>
   )
 }
@@ -302,7 +305,7 @@ function Work() {
             fillOpacity={0.2}
           >
             <motion.article whileHover={{ scale: 0.992 }} transition={{ duration: 0.35, ease }} className="group relative h-full min-h-[380px] overflow-hidden rounded-[23px] md:min-h-[420px] lg:min-h-0">
-              <video className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" src={FEATURE_VIDEO} autoPlay loop muted playsInline />
+              <video className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" src={JELLYFISH_VIDEO} autoPlay loop muted playsInline preload="metadata" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <p className="text-sm text-[#E1E0CC]">Creative canvas.</p>
@@ -425,7 +428,7 @@ function Contact() {
 export default function App() {
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
-      <PortfolioRibbon />
+      <PortfolioGalaxy />
       <div className="relative z-10">
       <Hero />
       <About />
