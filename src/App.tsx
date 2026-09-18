@@ -175,7 +175,7 @@ function RotatingRole() {
 
   useEffect(() => {
     if (reduced) return
-    const timer = window.setInterval(() => setIndex((i) => (i + 1) % roles.length), 1800)
+    const timer = window.setInterval(() => setIndex((i) => (i + 1) % roles.length), 2200)
     return () => window.clearInterval(timer)
   }, [reduced])
 
@@ -183,15 +183,15 @@ function RotatingRole() {
     <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] sm:text-xs">
       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
       <span className="text-primary/55">I work as</span>
-      <span className="relative inline-flex min-w-[180px] overflow-hidden text-primary sm:min-w-[220px]">
-        <AnimatePresence mode="wait">
+      <span className="relative inline-flex min-w-[190px] overflow-hidden text-primary sm:min-w-[240px]">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.span
             key={roles[index]}
-            initial={reduced ? false : { y: 16, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={reduced ? undefined : { y: -16, opacity: 0 }}
+            initial={reduced ? false : { y: 18, opacity: 0, filter: 'blur(6px)' }}
+            animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+            exit={reduced ? undefined : { y: -18, opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.45, ease }}
-            className="inline-block"
+            className="inline-block whitespace-nowrap"
           >
             {roles[index]}
           </motion.span>
