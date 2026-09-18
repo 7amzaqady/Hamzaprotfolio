@@ -4,6 +4,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
+import SpecularButton from './components/SpecularButton'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
@@ -405,7 +406,31 @@ function Contact() {
               </h2>
             </div>
             <div className="lg:col-span-3">
-              <a href="mailto:hello@hamzaqady.com" className="inline-flex min-h-12 items-center gap-3 rounded-full bg-primary px-5 text-sm font-bold text-[#090909] transition-transform active:scale-[.97]">Start a conversation <ArrowRight size={16} /></a>
+              <SpecularButton
+                size="md"
+                radius={999}
+                tint="#DEDBC8"
+                tintOpacity={0.08}
+                blur={10}
+                textColor="#DEDBC8"
+                lineColor="#FFF7DF"
+                baseColor="#6B6250"
+                intensity={1.25}
+                shineSize={11}
+                shineFade={42}
+                thickness={1.15}
+                speed={0.28}
+                followMouse
+                proximity={260}
+                autoAnimate={false}
+                className="contact-specular-cta"
+                onClick={() => { window.location.href = 'mailto:hello@hamzaqady.com' }}
+              >
+                <span className="inline-flex items-center gap-3">
+                  Start a conversation
+                  <ArrowRight size={16} />
+                </span>
+              </SpecularButton>
             </div>
           </div>
         </div>
