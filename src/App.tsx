@@ -5,6 +5,7 @@ import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
 import SpecularButton from './components/SpecularButton'
+import FlowingMenu from './components/FlowingMenu'
 
 const HERO_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
@@ -375,19 +376,46 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
 }
 
 function Expertise() {
-  const items = ['Brand Identity', 'Art Direction', 'Packaging Design', 'Frontend Development', 'Motion Design']
+  const items = [
+    {
+      link: '#work',
+      text: 'Brand Identity',
+      image: 'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
+    },
+    {
+      link: '#work',
+      text: 'Art Direction',
+      image: 'https://images.unsplash.com/photo-1781499455083-6ccc3beb20cd?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
+    },
+    {
+      link: '#work',
+      text: 'Packaging Design',
+      image: 'https://images.unsplash.com/photo-1776394254711-4a0d7345269a?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
+    },
+    {
+      link: '#work',
+      text: 'Frontend Development',
+      image: 'https://images.unsplash.com/photo-1781242629922-6f39cc3671cd?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
+    },
+    {
+      link: '#work',
+      text: 'Motion Design',
+      image: 'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
+    },
+  ]
+
   return (
     <section id="expertise" className="bg-transparent px-3 py-24 sm:px-4 md:px-6 md:py-32">
-      <div className="mx-auto max-w-[1400px] border-y border-white/10">
-        {items.map((item, i) => (
-          <motion.div key={item} whileHover={{ x: 10 }} transition={{ duration: 0.28, ease }} className="group flex min-h-24 items-center justify-between border-b border-white/10 px-1 last:border-b-0 sm:min-h-28 md:min-h-32">
-            <div className="flex items-center gap-4 sm:gap-8">
-              <span className="text-[10px] text-primary/35 sm:text-xs">0{i + 1}</span>
-              <h3 className="text-2xl tracking-[-0.03em] text-[#E1E0CC] transition-colors group-hover:text-primary sm:text-3xl md:text-4xl lg:text-5xl">{item}</h3>
-            </div>
-            <ArrowRight size={20} className="text-primary/35 transition-transform duration-300 group-hover:-rotate-45 group-hover:text-primary" />
-          </motion.div>
-        ))}
+      <div className="mx-auto h-[560px] max-w-[1400px] sm:h-[620px] md:h-[680px]">
+        <FlowingMenu
+          items={items}
+          speed={13}
+          textColor="#E1E0CC"
+          bgColor="transparent"
+          marqueeBgColor="#DEDBC8"
+          marqueeTextColor="#090909"
+          borderColor="rgba(225,224,204,0.14)"
+        />
       </div>
     </section>
   )
