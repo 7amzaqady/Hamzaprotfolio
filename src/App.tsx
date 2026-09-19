@@ -218,16 +218,16 @@ function GlobalHeader() {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-3 z-[90] flex justify-center px-3 sm:top-4">
-      <div className="pointer-events-auto">
+      <div className="gooey-nav-shell pointer-events-auto">
         <GooeyNav
           items={items}
-          particleCount={12}
-          particleDistances={[72, 10]}
-          particleR={84}
+          particleCount={15}
+          particleDistances={[90, 10]}
+          particleR={100}
           initialActiveIndex={0}
-          animationTime={520}
-          timeVariance={220}
-          colors={[1, 2, 3, 1, 4, 2, 1]}
+          animationTime={600}
+          timeVariance={300}
+          colors={[1, 2, 3, 1, 2, 3, 1, 4]}
         />
       </div>
     </header>
