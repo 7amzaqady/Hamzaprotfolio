@@ -6,6 +6,7 @@ import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
 import SpecularButton from './components/SpecularButton'
 import FlowingMenu from './components/FlowingMenu'
+import GooeyNav from './components/GooeyNav'
 
 const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`
 const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
@@ -207,6 +208,32 @@ function RotatingRole() {
   )
 }
 
+function GlobalHeader() {
+  const items = [
+    { label: 'About', href: '#about' },
+    { label: 'Work', href: '#work' },
+    { label: 'Expertise', href: '#expertise' },
+    { label: 'Contact', href: '#contact' },
+  ]
+
+  return (
+    <header className="pointer-events-none fixed inset-x-0 top-3 z-[90] flex justify-center px-3 sm:top-4">
+      <div className="pointer-events-auto">
+        <GooeyNav
+          items={items}
+          particleCount={12}
+          particleDistances={[72, 10]}
+          particleR={84}
+          initialActiveIndex={0}
+          animationTime={520}
+          timeVariance={220}
+          colors={[1, 2, 3, 1, 4, 2, 1]}
+        />
+      </div>
+    </header>
+  )
+}
+
 function HeroBackgroundVideo() {
   const [src, setSrc] = useState(HERO_VIDEO)
 
@@ -234,16 +261,6 @@ function Hero() {
         <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.48] mix-blend-overlay" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/5 to-black/80" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_64%_35%,rgba(233,190,128,0.10),transparent_30%)]" />
-
-        <nav className="absolute left-1/2 top-0 z-30 -translate-x-1/2 rounded-b-[22px] bg-[#090909] px-4 py-2.5 sm:px-7 md:px-10">
-          <div className="flex items-center gap-3 text-[9px] text-[rgba(225,224,204,.76)] sm:gap-6 sm:text-[10px] md:gap-10 md:text-xs">
-            {['About', 'Work', 'Expertise', 'Contact'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="transition-colors hover:text-[#E1E0CC] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70">
-                {item}
-              </a>
-            ))}
-          </div>
-        </nav>
 
         <div className="absolute inset-x-0 bottom-0 z-20 p-5 sm:p-7 md:p-10 lg:p-12">
           <div className="grid items-end gap-7 lg:grid-cols-12">
@@ -491,6 +508,7 @@ export default function App() {
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
       <PortfolioGalaxy />
+      <GlobalHeader />
       <div className="relative z-10">
       <Hero />
       <About />
