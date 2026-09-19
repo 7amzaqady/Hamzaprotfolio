@@ -42,6 +42,7 @@
   --color-3: #c98c4b;
   --color-4: #fff9e8;
   position: relative;
+  isolation: isolate;
 }
 
 .gooey-nav-container nav {
@@ -143,8 +144,8 @@
 
 .gooey-nav-container .effect.filter {
   z-index: 2;
-  filter: blur(7px) contrast(100) blur(0);
-  mix-blend-mode: lighten;
+  filter: blur(5px) contrast(18);
+  mix-blend-mode: screen;
 }
 
 .gooey-nav-container .effect.filter::before {
@@ -177,8 +178,8 @@
 .gooey-nav-container .point {
   display: block;
   opacity: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 100%;
   transform-origin: center;
 }
@@ -186,8 +187,8 @@
 .gooey-nav-container .particle {
   --time: 5s;
   position: absolute;
-  top: calc(50% - 8px);
-  left: calc(50% - 8px);
+  top: calc(50% - 11px);
+  left: calc(50% - 11px);
   animation: particle var(--time) ease 1 -350ms;
 }
 
@@ -272,9 +273,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gooey-nav-container .particle,
-  .gooey-nav-container .point,
-  .gooey-nav-container .effect.active::after {
+  .gooey-nav-container:not(.force-motion) .particle,
+  .gooey-nav-container:not(.force-motion) .point,
+  .gooey-nav-container:not(.force-motion) .effect.active::after {
     animation: none !important;
   }
 }
