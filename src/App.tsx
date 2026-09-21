@@ -89,7 +89,7 @@ function FluidName() {
       role="heading"
       aria-level={1}
       aria-label="HAMZA QADY"
-      className="relative w-full max-w-[980px]"
+      className="fluid-name relative w-full max-w-[980px]"
       style={{ height: Math.round(fontSize * 1.62) }}
     >
       <FluidText
@@ -149,18 +149,19 @@ function PortfolioRibbon() {
   const motionAllowed = useMotionAllowed()
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden bg-[#090909]" aria-hidden="true">
+    <div className="pointer-events-none fixed inset-0 z-[5] overflow-hidden opacity-60 mix-blend-screen" aria-hidden="true">
       <div className="ribbon-glow-fallback absolute inset-0" />
       {motionAllowed && (
         <RibbonGlow
+          className="ribbon-glow"
           background="#090909"
-          color1="#171812"
-          color2="#3A3025"
-          speed={34}
-          size={108}
+          color1="#2A261A"
+          color2="#6A4D2C"
+          speed={52}
+          size={132}
           angle={-165}
-          hover={78}
-          reach={320}
+          hover={96}
+          reach={420}
           style={{
             position: 'absolute',
             inset: 0,
@@ -191,10 +192,10 @@ function AnimeScrambleBody({ text }: { text: string }) {
         text,
         chars: 'uppercase',
         override: '_',
-        revealRate: 42,
-        settleRate: 26,
-        settleDuration: 420,
-        perturbation: 0.35,
+        revealRate: 24,
+        settleRate: 18,
+        settleDuration: 900,
+        perturbation: 0.65,
         seed: 42,
       }),
     })
@@ -422,7 +423,7 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
       glowRadius={28}
       glowIntensity={0.8}
       coneSpread={24}
-      animated={index === 0}
+      animated
       colors={['#ff4d3a', '#d0a96e', '#dedbc8']}
       fillOpacity={0.16}
     >
