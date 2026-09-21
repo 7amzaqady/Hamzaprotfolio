@@ -367,8 +367,9 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
   const inView = useInView(ref, { once: true, margin: '-100px' })
   if (index === 0) return (
     <a href="?project=blooms" className="group relative block min-h-[420px] overflow-hidden rounded-[24px] bg-[#103A2C] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#B77F7F] lg:h-full lg:min-h-0">
-      <img src={`${import.meta.env.BASE_URL}projects/blooms/cover.webp`} alt="Blooms cream and rose packaging concept" width="640" height="585" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+      <div className="absolute inset-x-0 top-0 bottom-[210px] flex items-center justify-center px-7">
+        <img src={`${import.meta.env.BASE_URL}projects/blooms/logo-reverse.webp`} alt="Blooms cream logo with a dusty rose flower" width="2048" height="755" loading="lazy" className="h-auto w-full max-w-[340px] object-contain transition-transform duration-500 group-hover:scale-[1.03]" />
+      </div>
       <div className="absolute inset-x-0 bottom-0 p-6 text-[#F8F5EE]">
         <p className="mb-3 text-[10px] uppercase tracking-[.2em]">01 / Independent redesign</p>
         <h3 className="text-2xl">Blooms Book Store</h3>
