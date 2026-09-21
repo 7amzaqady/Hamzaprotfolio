@@ -439,6 +439,7 @@ export default function FluidText(props: Props) {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [glEpoch, setGlEpoch] = useState(0);
+  const [webglReady, setWebglReady] = useState(false);
 
   const font = { ...DEFAULT_FONT, ...(props.font || {}) };
   const align =
@@ -477,6 +478,7 @@ export default function FluidText(props: Props) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    setWebglReady(false);
 
     const params: WebGLContextAttributes = {
       alpha: true,
@@ -1241,6 +1243,7 @@ export default function FluidText(props: Props) {
     let lastShading = effectiveShading();
     let needsResize = true;
     let raf = 0;
+    let didSignalReady = false;
 
     const frame = () => {
       if (g.isContextLost()) {
@@ -1281,6 +1284,10 @@ export default function FluidText(props: Props) {
       applyInputs();
       step(dt);
       render();
+      if (!didSignalReady) {
+        didSignalReady = true;
+        setWebglReady(true);
+      }
       raf = requestAnimationFrame(frame);
     };
 
@@ -1349,6 +1356,24 @@ export default function FluidText(props: Props) {
         ...style,
       }}
     >
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent:
+            align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start",
+          whiteSpace: "pre-wrap",
+          color,
+          opacity: webglReady ? 0 : 1,
+          pointerEvents: "none",
+          ...font,
+        }}
+      >
+        {text}
+      </div>
       <canvas
         ref={canvasRef}
         style={{
