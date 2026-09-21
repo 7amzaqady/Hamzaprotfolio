@@ -1,18 +1,18 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { ArrowDownRight, ArrowRight, Check } from 'lucide-react'
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
-import { animate, scrambleText } from 'animejs'
 import FluidText from './components/FluidText'
-import RibbonGlow from './components/RibbonGlow'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
 import SpecularButton from './components/SpecularButton'
+import FlowingMenu from './components/FlowingMenu'
 import GooeyNav from './components/GooeyNav'
 
 const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`
 const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
 
+const Galaxy = lazy(() => import('./components/Galaxy'))
 const BloomsPage = lazy(() => import('./pages/BloomsPage'))
 
 const ease = [0.16, 1, 0.3, 1] as const
@@ -23,9 +23,7 @@ function useMotionAllowed() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    const shouldForce = params.get('motion') === '1'
-    setForced(shouldForce)
-    document.documentElement.classList.toggle('force-motion', shouldForce)
+    setForced(params.get('motion') === '1')
   }, [])
 
   return !reduced || forced
@@ -91,7 +89,7 @@ function FluidName() {
       role="heading"
       aria-level={1}
       aria-label="HAMZA QADY"
-      className="fluid-name relative w-full max-w-[980px]"
+      className="relative w-full max-w-[980px]"
       style={{ height: Math.round(fontSize * 1.62) }}
     >
       <FluidText
@@ -146,66 +144,36 @@ function AboutMaskLine({ text, serif = false, delay = 0 }: { text: string; serif
   )
 }
 
-
-function PortfolioRibbon() {
+function PortfolioGalaxy() {
   const motionAllowed = useMotionAllowed()
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[5] overflow-hidden opacity-60 mix-blend-screen" aria-hidden="true">
-      <div className="ribbon-glow-fallback absolute inset-0" />
-      {motionAllowed && (
-        <RibbonGlow
-          className="ribbon-glow"
-          background="#090909"
-          color1="#2A261A"
-          color2="#6A4D2C"
-          speed={52}
-          size={132}
-          angle={-165}
-          hover={96}
-          reach={420}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            minWidth: '100%',
-            minHeight: '100%',
-          }}
-        />
-      )}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,rgba(9,9,9,.12)_54%,rgba(9,9,9,.56)_100%)]" />
+    <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden bg-[#090909]" aria-hidden="true">
+      <div className="absolute inset-0 opacity-[0.56]">
+        <Suspense fallback={null}>
+          <Galaxy
+            focal={[0.5, 0.5]}
+            rotation={[1.0, 0.0]}
+            starSpeed={0.34}
+            density={0.9}
+            hueShift={28}
+            disableAnimation={!motionAllowed}
+            speed={0.55}
+            mouseInteraction={motionAllowed}
+            glowIntensity={0.24}
+            saturation={0.42}
+            mouseRepulsion
+            repulsionStrength={2.6}
+            twinkleIntensity={0.24}
+            rotationSpeed={0.025}
+            autoCenterRepulsion={0}
+            transparent
+          />
+        </Suspense>
+      </div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,rgba(9,9,9,.14)_52%,rgba(9,9,9,.62)_100%)]" />
     </div>
   )
-}
-
-
-function AnimeScrambleBody({ text }: { text: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-  const motionAllowed = useMotionAllowed()
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !inView || !motionAllowed) return
-
-    const animation = animate(el, {
-      innerHTML: scrambleText({
-        text,
-        chars: 'uppercase',
-        override: '_',
-        revealRate: 24,
-        settleRate: 18,
-        settleDuration: 900,
-        perturbation: 0.65,
-        seed: 42,
-      }),
-    })
-
-    return () => { animation.cancel() }
-  }, [inView, motionAllowed, text])
-
-  return <span ref={ref}>{text}</span>
 }
 
 function RotatingRole() {
@@ -334,7 +302,7 @@ function About() {
         </div>
 
         <p className="mx-auto mt-12 max-w-3xl text-sm leading-7 text-primary/80 sm:text-base md:mt-16 md:text-lg">
-          <AnimeScrambleBody text={body} />
+          {body}
         </p>
       </div>
     </section>
@@ -425,7 +393,7 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
       glowRadius={28}
       glowIntensity={0.8}
       coneSpread={24}
-      animated
+      animated={index === 0}
       colors={['#ff4d3a', '#d0a96e', '#dedbc8']}
       fillOpacity={0.16}
     >
@@ -509,7 +477,7 @@ export default function App() {
   }
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
-      <PortfolioRibbon />
+      <PortfolioGalaxy />
       <GlobalHeader />
       <div className="relative z-10">
       <Hero />
