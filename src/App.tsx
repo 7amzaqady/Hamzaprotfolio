@@ -23,7 +23,9 @@ function useMotionAllowed() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    setForced(params.get('motion') === '1')
+    const shouldForce = params.get('motion') === '1'
+    setForced(shouldForce)
+    document.documentElement.classList.toggle('force-motion', shouldForce)
   }, [])
 
   return !reduced || forced
