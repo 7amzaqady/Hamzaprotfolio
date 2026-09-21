@@ -34,8 +34,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 ::selection { background: #dedbc8; color: #090909; }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
+  html:not(.force-motion) { scroll-behavior: auto; }
+  html:not(.force-motion) *,
+  html:not(.force-motion) *::before,
+  html:not(.force-motion) *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
