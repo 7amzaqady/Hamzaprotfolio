@@ -18,15 +18,20 @@ const BloomsPage = lazy(() => import('./pages/BloomsPage'))
 const ease = [0.16, 1, 0.3, 1] as const
 
 function useMotionAllowed() {
-  const reduced = useReducedMotion()
-  const [forced, setForced] = useState(false)
+  const [motionAllowed, setMotionAllowed] = useState(true)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    setForced(params.get('motion') === '1')
+    const disabled = params.get('motion') === '0'
+    setMotionAllowed(!disabled)
+    document.documentElement.classList.toggle('force-motion', !disabled)
+
+    return () => {
+      document.documentElement.classList.remove('force-motion')
+    }
   }, [])
 
-  return !reduced || forced
+  return motionAllowed
 }
 
 function WordsPullUp({ text, className = '' }: { text: string; className?: string }) {
