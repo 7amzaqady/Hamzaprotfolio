@@ -13,6 +13,7 @@ const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKV
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
 
 const Galaxy = lazy(() => import('./components/Galaxy'))
+const BloomsPage = lazy(() => import('./pages/BloomsPage'))
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -364,6 +365,18 @@ function Work() {
 function ProjectCard({ project, index }: { project: typeof projects[number]; index: number }) {
   const ref = useRef<HTMLElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  if (index === 0) return (
+    <a href="?project=blooms" className="group relative block min-h-[420px] overflow-hidden rounded-[24px] bg-[#103A2C] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#B77F7F] lg:h-full lg:min-h-0">
+      <img src={`${import.meta.env.BASE_URL}projects/blooms/cover.webp`} alt="Blooms cream and rose packaging concept" width="640" height="585" loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-6 text-[#F8F5EE]">
+        <p className="mb-3 text-[10px] uppercase tracking-[.2em]">01 / Independent redesign</p>
+        <h3 className="text-2xl">Blooms Book Store</h3>
+        <p className="mt-2 text-sm opacity-80">Brand identity / Art direction</p>
+        <span className="mt-6 flex items-center justify-between border-t border-white/30 pt-4 text-sm">Explore the project <ArrowRight size={20} /></span>
+      </div>
+    </a>
+  )
   const bullets = index === 0
     ? ['Identity system', 'Packaging direction', 'Editorial brand language']
     : index === 1
@@ -505,6 +518,9 @@ function Contact() {
 }
 
 export default function App() {
+  if (new URLSearchParams(window.location.search).get('project') === 'blooms') {
+    return <Suspense fallback={<main style={{ background: '#F8F5EE', color: '#103A2C', minHeight: '100vh', padding: '3rem' }}>Loading Blooms…</main>}><BloomsPage /></Suspense>
+  }
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
       <PortfolioGalaxy />
