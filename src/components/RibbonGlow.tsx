@@ -287,6 +287,7 @@ const DEFAULTS = {
 }
 
 interface RibbonGlowProps {
+    className?: string
     style?: React.CSSProperties
     background?: string
     color1?: string
@@ -302,6 +303,7 @@ interface RibbonGlowProps {
 
 function __OriginkitBase_RibbonGlow(props: RibbonGlowProps) {
     const {
+        className,
         style,
         background = DEFAULTS.background,
         color1 = DEFAULTS.color1,
@@ -445,10 +447,11 @@ function __OriginkitBase_RibbonGlow(props: RibbonGlowProps) {
     return (
         <div
             ref={rootRef}
+            className={className}
             style={{
                 position: "relative",
                 overflow: "hidden",
-                background,
+                background: "transparent",
                 minWidth: 1200,
                 minHeight: 800,
                 width: typeof width === "number" && width > 0 ? width : "100%",
