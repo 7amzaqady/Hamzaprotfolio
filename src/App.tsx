@@ -1,18 +1,18 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
 import { ArrowDownRight, ArrowRight, Check } from 'lucide-react'
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
+import { animate, scrambleText } from 'animejs'
 import FluidText from './components/FluidText'
+import RibbonGlow from './components/RibbonGlow'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
 import SpecularButton from './components/SpecularButton'
-import FlowingMenu from './components/FlowingMenu'
 import GooeyNav from './components/GooeyNav'
 
 const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`
 const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
 
-const Galaxy = lazy(() => import('./components/Galaxy'))
 const BloomsPage = lazy(() => import('./pages/BloomsPage'))
 
 const ease = [0.16, 1, 0.3, 1] as const
@@ -144,36 +144,65 @@ function AboutMaskLine({ text, serif = false, delay = 0 }: { text: string; serif
   )
 }
 
-function PortfolioGalaxy() {
+
+function PortfolioRibbon() {
   const motionAllowed = useMotionAllowed()
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[4] overflow-hidden bg-[#090909]" aria-hidden="true">
-      <div className="absolute inset-0 opacity-[0.56]">
-        <Suspense fallback={null}>
-          <Galaxy
-            focal={[0.5, 0.5]}
-            rotation={[1.0, 0.0]}
-            starSpeed={0.34}
-            density={0.9}
-            hueShift={28}
-            disableAnimation={!motionAllowed}
-            speed={0.55}
-            mouseInteraction={motionAllowed}
-            glowIntensity={0.24}
-            saturation={0.42}
-            mouseRepulsion
-            repulsionStrength={2.6}
-            twinkleIntensity={0.24}
-            rotationSpeed={0.025}
-            autoCenterRepulsion={0}
-            transparent
-          />
-        </Suspense>
-      </div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,rgba(9,9,9,.14)_52%,rgba(9,9,9,.62)_100%)]" />
+      <div className="ribbon-glow-fallback absolute inset-0" />
+      {motionAllowed && (
+        <RibbonGlow
+          background="#090909"
+          color1="#171812"
+          color2="#3A3025"
+          speed={34}
+          size={108}
+          angle={-165}
+          hover={78}
+          reach={320}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            minWidth: '100%',
+            minHeight: '100%',
+          }}
+        />
+      )}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,rgba(9,9,9,.12)_54%,rgba(9,9,9,.56)_100%)]" />
     </div>
   )
+}
+
+
+function AnimeScrambleBody({ text }: { text: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const motionAllowed = useMotionAllowed()
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !inView || !motionAllowed) return
+
+    const animation = animate(el, {
+      innerHTML: scrambleText({
+        text,
+        chars: 'uppercase',
+        override: '_',
+        revealRate: 42,
+        settleRate: 26,
+        settleDuration: 420,
+        perturbation: 0.35,
+        seed: 42,
+      }),
+    })
+
+    return () => { animation.cancel() }
+  }, [inView, motionAllowed, text])
+
+  return <span ref={ref}>{text}</span>
 }
 
 function RotatingRole() {
@@ -213,7 +242,6 @@ function GlobalHeader() {
   const items = [
     { label: 'About', href: '#about' },
     { label: 'Work', href: '#work' },
-    { label: 'Expertise', href: '#expertise' },
     { label: 'Contact', href: '#contact' },
   ]
 
@@ -303,7 +331,7 @@ function About() {
         </div>
 
         <p className="mx-auto mt-12 max-w-3xl text-sm leading-7 text-primary/80 sm:text-base md:mt-16 md:text-lg">
-          {body}
+          <AnimeScrambleBody text={body} />
         </p>
       </div>
     </section>
@@ -426,52 +454,6 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
   )
 }
 
-function Expertise() {
-  const items = [
-    {
-      link: '#work',
-      text: 'Brand Identity',
-      image: 'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
-    },
-    {
-      link: '#work',
-      text: 'Art Direction',
-      image: 'https://images.unsplash.com/photo-1781499455083-6ccc3beb20cd?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
-    },
-    {
-      link: '#work',
-      text: 'Packaging Design',
-      image: 'https://images.unsplash.com/photo-1776394254711-4a0d7345269a?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
-    },
-    {
-      link: '#work',
-      text: 'Frontend Development',
-      image: 'https://images.unsplash.com/photo-1781242629922-6f39cc3671cd?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
-    },
-    {
-      link: '#work',
-      text: 'Motion Design',
-      image: 'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=600&h=400&fit=crop&sat=-100&auto=format',
-    },
-  ]
-
-  return (
-    <section id="expertise" className="bg-transparent px-3 py-24 sm:px-4 md:px-6 md:py-32">
-      <div className="mx-auto h-[560px] max-w-[1400px] sm:h-[620px] md:h-[680px]">
-        <FlowingMenu
-          items={items}
-          speed={13}
-          textColor="#E1E0CC"
-          bgColor="transparent"
-          marqueeBgColor="#DEDBC8"
-          marqueeTextColor="#090909"
-          borderColor="rgba(225,224,204,0.14)"
-        />
-      </div>
-    </section>
-  )
-}
-
 function Contact() {
   return (
     <footer id="contact" className="bg-transparent px-3 pb-3 sm:px-4 sm:pb-4 md:px-6 md:pb-6">
@@ -524,13 +506,12 @@ export default function App() {
   }
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
-      <PortfolioGalaxy />
+      <PortfolioRibbon />
       <GlobalHeader />
       <div className="relative z-10">
       <Hero />
       <About />
       <Work />
-      <Expertise />
       <Contact />
       </div>
     </main>
