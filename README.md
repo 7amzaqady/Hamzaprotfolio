@@ -1,6 +1,6 @@
 # Hamza Qady — cinematic portfolio
 
-React + Vite + TypeScript + Tailwind CSS portfolio prototype.
+React + Vite + TypeScript + Tailwind CSS portfolio.
 
 ## Run
 
@@ -9,37 +9,24 @@ npm install
 npm run dev
 ```
 
-## OriginKit Ribbon Glow
-
-The project now includes a self-contained WebGL2 Ribbon Glow implementation in `src/components/RibbonGlow.tsx`, mounted once at the app root so it remains active from the first section to the footer. It follows the published OriginKit Ribbon Glow behavior: layered folded ribbons, half-resolution rendering, pointer-driven swirl/velocity, warm screen-blended light, and a reduced-motion path.
-
-If you have Bun installed and want the official OriginKit CLI package locally as well, run:
+## Production
 
 ```bash
-bunx --bun originkit@latest add ribbon-glow
+npm run build
+npm run preview
 ```
 
-Or without Bun:
+The site is deployed to GitHub Pages from `main` through `.github/workflows/pages.yml`.
 
-```bash
-npx originkit@latest add ribbon-glow
-```
+## Motion and accessibility
 
-Package scripts are included:
+The portfolio uses WebGL and motion effects with static/readable fallbacks. By default the site respects the visitor's `prefers-reduced-motion` setting.
 
-```bash
-npm run add:ribbon-glow
-npm run add:ribbon-glow:npm
-```
+For debugging or presentation:
+- `?motion=1` explicitly enables motion.
+- `?motion=0` explicitly disables motion.
 
-## Fixed effects build
+## Case studies
 
-This revision fixes the previously invisible effects:
-
-- About headline now uses an actual character-by-character scramble/reveal on first viewport entry.
-- The full-page Ribbon Glow is composited above opaque section backgrounds, with pointer-events disabled.
-- A CSS glow fallback remains visible if WebGL2 is unavailable.
-- The HAMZA QADY hero title uses a fluid SVG displacement field that increases near the pointer.
-- Reduced-motion users receive static, readable fallbacks.
-
-OriginKit helper commands are included in package.json, but this build does not depend on the CLI being available at runtime.
+- Blooms — available at `?project=blooms`
+- QANTRA — visual identity case study in development
