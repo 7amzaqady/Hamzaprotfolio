@@ -10,7 +10,7 @@ import GooeyNav from './components/GooeyNav'
 
 const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`
 const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
-const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
+const CREATIVE_VIDEO = HERO_VIDEO
 
 const Galaxy = lazy(() => import('./components/Galaxy'))
 const BloomsPage = lazy(() => import('./pages/BloomsPage'))
@@ -18,20 +18,21 @@ const BloomsPage = lazy(() => import('./pages/BloomsPage'))
 const ease = [0.16, 1, 0.3, 1] as const
 
 function useMotionAllowed() {
-  const [motionAllowed, setMotionAllowed] = useState(true)
+  const reducedMotion = useReducedMotion()
+  const [override, setOverride] = useState<boolean | null>(null)
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const disabled = params.get('motion') === '0'
-    setMotionAllowed(!disabled)
-    document.documentElement.classList.toggle('force-motion', !disabled)
+    const value = new URLSearchParams(window.location.search).get('motion')
+    const nextOverride = value === '1' ? true : value === '0' ? false : null
+    setOverride(nextOverride)
+    document.documentElement.classList.toggle('force-motion', nextOverride === true)
 
     return () => {
       document.documentElement.classList.remove('force-motion')
     }
   }, [])
 
-  return motionAllowed
+  return override ?? !reducedMotion
 }
 
 function WordsPullUp({ text, className = '' }: { text: string; className?: string }) {
@@ -316,7 +317,7 @@ function About() {
 
 const projects = [
   { title: 'Blooms Book Store', type: 'Brand identity / Art direction', meta: '01' },
-  { title: 'Qantara', type: 'Visual system / Pattern language', meta: '02' },
+  { title: 'QANTRA', type: 'Visual identity system / Art direction', meta: '02' },
   { title: 'Digital Experiments', type: 'Frontend / Motion / Creative coding', meta: '03' },
 ]
 
@@ -348,7 +349,7 @@ function Work() {
             fillOpacity={0.2}
           >
             <motion.article whileHover={{ scale: 0.992 }} transition={{ duration: 0.35, ease }} className="group relative h-full min-h-[380px] overflow-hidden rounded-[23px] md:min-h-[420px] lg:min-h-0">
-              <video className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" src={JELLYFISH_VIDEO} autoPlay loop muted playsInline preload="metadata" />
+              <video className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]" src={CREATIVE_VIDEO} autoPlay loop muted playsInline preload="metadata" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 p-6">
                 <p className="text-sm text-[#E1E0CC]">Creative canvas.</p>
@@ -412,7 +413,9 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
       <div>
         <div className="mb-10 flex items-start justify-between">
           <span className="text-5xl font-light tracking-[-0.06em] text-primary/20">{project.meta}</span>
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-[#151513] text-primary"><ArrowDownRight size={17} /></span>
+          <span className="rounded-full border border-primary/15 px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-primary/55">
+            {index === 1 ? 'Case study next' : 'Selected studies'}
+          </span>
         </div>
         <h3 className="text-xl text-[#E1E0CC] sm:text-2xl">{project.title}</h3>
         <p className="mt-2 text-sm text-primary/45">{project.type}</p>
