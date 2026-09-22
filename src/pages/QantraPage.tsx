@@ -7,6 +7,9 @@ gsap.registerPlugin(ScrollTrigger)
 
 const asset = (name: string) => import.meta.env.BASE_URL + 'projects/qantra/' + name + '.webp'
 
+const QANTRA_HERO_IMAGE = 'https://chatgpt.com/backend-api/estuary/content?id=file_0000000070e4822f9f7572dd073e7e80&ts=497248&p=fs&cid=1&sig=814d663497920d5276122cfe34fa27d93ea70071c6341ec70d8538d0ad764d00&v=0'
+const QANTRA_CLOSING_IMAGE = 'https://chatgpt.com/backend-api/estuary/content?id=file_000000009d68820cb5d7590723dbe477&ts=497248&p=fs&cid=1&sig=dfc6ceccb42b1bd900d5d6cad0edd11c234c5809eb62198d922fde90c28351e2&v=0'
+
 const voices = [
   {
     id: 'editorial',
@@ -73,14 +76,14 @@ export default function QantraPage() {
       )
 
       gsap.fromTo(
-        '.qantra-hero-portal',
-        { scale: 0.9, yPercent: 8, opacity: 0 },
-        { scale: 1, yPercent: 0, opacity: 1, duration: 1.35, ease: 'power3.out', delay: 0.12 },
+        '.qantra-hero-image',
+        { scale: 1.08, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1.35, ease: 'power3.out', delay: 0.08 },
       )
 
-      gsap.to('.qantra-hero-portal', {
-        scale: 1.14,
-        yPercent: -6,
+      gsap.to('.qantra-hero-image', {
+        scale: 1.06,
+        yPercent: -2.5,
         ease: 'none',
         scrollTrigger: {
           trigger: '.qantra-hero',
@@ -156,11 +159,16 @@ export default function QantraPage() {
       </header>
 
       <section className="qantra-hero" aria-labelledby="qantra-title">
-        <div className="qantra-hero-portal" aria-hidden="true">
-          <div className="qantra-portal-line qantra-portal-line-one" />
-          <div className="qantra-portal-line qantra-portal-line-two" />
-          <div className="qantra-portal-line qantra-portal-line-three" />
-        </div>
+        <img
+          className="qantra-hero-image"
+          src={QANTRA_HERO_IMAGE}
+          alt=""
+          aria-hidden="true"
+          width="1672"
+          height="941"
+          fetchPriority="high"
+        />
+        <div className="qantra-hero-image-overlay" aria-hidden="true" />
         <div className="qantra-hero-grain" aria-hidden="true" />
 
         <div className="qantra-hero-topline">
@@ -341,7 +349,16 @@ export default function QantraPage() {
       </section>
 
       <section className="qantra-closing">
-        <ArchMotif className="qantra-closing-arch" />
+        <img
+          className="qantra-closing-image"
+          src={QANTRA_CLOSING_IMAGE}
+          alt=""
+          aria-hidden="true"
+          width="1672"
+          height="941"
+          loading="lazy"
+        />
+        <div className="qantra-closing-overlay" aria-hidden="true" />
         <div className="qantra-closing-copy qantra-reveal">
           <span>QANTRA / 2026</span>
           <p>بين كتابٍ وقارئ،</p>
