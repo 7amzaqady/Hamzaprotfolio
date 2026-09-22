@@ -383,6 +383,20 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
       </div>
     </a>
   )
+
+  if (index === 1) return (
+    <a href="?project=qantra" className="group relative block min-h-[420px] overflow-hidden rounded-[24px] bg-[#0E2A47] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#B89B5E] lg:h-full lg:min-h-0">
+      <div className="absolute inset-x-0 top-0 bottom-[210px] flex items-center justify-center px-8">
+        <img src={`${import.meta.env.BASE_URL}projects/qantra/logo.webp`} alt="Qantra logo" loading="lazy" className="h-auto w-full max-w-[300px] object-contain transition-transform duration-500 group-hover:scale-[1.04]" />
+      </div>
+      <div className="absolute inset-x-0 bottom-0 p-6 text-[#F8F5EE]">
+        <p className="mb-3 text-[10px] uppercase tracking-[.2em] text-[#D7C9B2]">02 / Visual identity system</p>
+        <h3 className="text-3xl font-bold">قنطرة</h3>
+        <p className="mt-2 text-sm text-[#D7C9B2]">QANTRA / Visual Identity System</p>
+        <span className="mt-6 flex items-center justify-between border-t border-white/25 pt-4 text-sm">Explore the project <ArrowRight size={20} /></span>
+      </div>
+    </a>
+  )
   const bullets = index === 0
     ? ['Identity system', 'Packaging direction', 'Editorial brand language']
     : index === 1
