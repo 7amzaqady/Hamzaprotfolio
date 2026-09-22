@@ -348,21 +348,16 @@ export default function QantraPage() {
         </figure>
       </section>
 
-      <section className="qantra-closing">
-        <img
-          className="qantra-closing-image"
-          src={QANTRA_CLOSING_IMAGE}
-          alt=""
-          aria-hidden="true"
-          width="1672"
-          height="941"
-          loading="lazy"
-        />
+      <section
+        className="qantra-closing"
+        style={{ backgroundImage: `url(${QANTRA_CLOSING_IMAGE})` }}
+      >
         <div className="qantra-closing-overlay" aria-hidden="true" />
         <div className="qantra-closing-copy qantra-reveal">
           <span>QANTRA / 2026</span>
           <p>بين كتابٍ وقارئ،</p>
           <h2>قنطرة.</h2>
+          <i aria-hidden="true" />
         </div>
         <div className="qantra-closing-links">
           <a href={import.meta.env.BASE_URL + '#work'}>العودة إلى المشاريع <span>↗</span></a>
