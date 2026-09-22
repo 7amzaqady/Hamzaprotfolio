@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
-import { ArrowDownRight, ArrowRight, Check } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
