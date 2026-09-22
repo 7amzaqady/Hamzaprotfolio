@@ -7,8 +7,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 const asset = (name: string) => import.meta.env.BASE_URL + 'projects/qantra/' + name + '.webp'
 
-const QANTRA_HERO_IMAGE = 'https://chatgpt.com/backend-api/estuary/content?id=file_0000000070e4822f9f7572dd073e7e80&ts=497248&p=fs&cid=1&sig=814d663497920d5276122cfe34fa27d93ea70071c6341ec70d8538d0ad764d00&v=0'
-const QANTRA_CLOSING_IMAGE = 'https://chatgpt.com/backend-api/estuary/content?id=file_000000009d68820cb5d7590723dbe477&ts=497248&p=fs&cid=1&sig=dfc6ceccb42b1bd900d5d6cad0edd11c234c5809eb62198d922fde90c28351e2&v=0'
+const QANTRA_HERO_IMAGE = asset('hero')
+const QANTRA_CLOSING_IMAGE = asset('closing')
 
 const voices = [
   {
