@@ -17,21 +17,7 @@ const GooeyNav = ({
   const filterRef = useRef(null);
   const textRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
-  const [motionAllowed, setMotionAllowed] = useState(true);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const override = params.get('motion');
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    const sync = () => {
-      setMotionAllowed(override === '1' ? true : override === '0' ? false : !media.matches);
-    };
-
-    sync();
-    media.addEventListener?.('change', sync);
-    return () => media.removeEventListener?.('change', sync);
-  }, []);
+  const forceMotion = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('motion') !== '0';
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
@@ -53,7 +39,7 @@ const GooeyNav = ({
   };
 
   const makeParticles = element => {
-    if (!motionAllowed) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && !forceMotion) return;
 
     const d = particleDistances;
     const r = particleR;
@@ -165,7 +151,7 @@ const GooeyNav = ({
   }, [activeIndex]);
 
   return (
-    <div className={`gooey-nav-container${motionAllowed ? " force-motion" : ""}`} ref={containerRef}>
+    <div className={`gooey-nav-container${forceMotion ? " force-motion" : ""}`} ref={containerRef}>
       <nav aria-label="Primary navigation">
         <ul ref={navRef}>
           {items.map((item, index) => (
