@@ -14,6 +14,7 @@ const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
 
 const Galaxy = lazy(() => import('./components/Galaxy'))
 const BloomsPage = lazy(() => import('./pages/BloomsPage'))
+const QantraPage = lazy(() => import('./pages/QantraPage'))
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -407,8 +408,9 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
         initial={{ opacity: 0, scale: 0.96, y: 20 }}
         animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
         transition={{ duration: 0.7, delay: index * 0.12, ease }}
-        className="flex h-full min-h-[380px] flex-col justify-between rounded-[23px] bg-[#20201d] p-6 md:min-h-[420px] lg:min-h-0"
+        className="relative flex h-full min-h-[380px] flex-col justify-between rounded-[23px] bg-[#20201d] p-6 md:min-h-[420px] lg:min-h-0"
       >
+      {index === 1 && <a href="?project=qantra" className="absolute inset-0 z-20 rounded-[23px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#B89B5E]"><span className="sr-only">Explore QANTRA case study</span></a>}
       <div>
         <div className="mb-10 flex items-start justify-between">
           <span className="text-5xl font-light tracking-[-0.06em] text-primary/20">{project.meta}</span>
@@ -477,8 +479,12 @@ function Contact() {
 }
 
 export default function App() {
-  if (new URLSearchParams(window.location.search).get('project') === 'blooms') {
+  const project = new URLSearchParams(window.location.search).get('project')
+  if (project === 'blooms') {
     return <Suspense fallback={<main style={{ background: '#F8F5EE', color: '#103A2C', minHeight: '100vh', padding: '3rem' }}>Loading Blooms…</main>}><BloomsPage /></Suspense>
+  }
+  if (project === 'qantra') {
+    return <Suspense fallback={<main style={{ background: '#0E2A47', color: '#F8F5EE', minHeight: '100vh', padding: '3rem' }}>Loading QANTRA…</main>}><QantraPage /></Suspense>
   }
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
