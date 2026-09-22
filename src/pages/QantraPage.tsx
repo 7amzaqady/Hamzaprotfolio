@@ -192,6 +192,10 @@ export default function QantraPage() {
           <p>Visual Identity System<br />Art Direction<br />Patterns & Applications</p>
           <span>ملاحظة</span>
           <p>الشعار موجود مسبقاً ولم يتم تقديمه هنا كتصميم من عملي.</p>
+          <figure className="qantra-existing-mark">
+            <img src={asset('logo')} alt="الشعار الموجود مسبقاً لمكتبة قنطرة" width="640" height="640" loading="lazy" />
+            <figcaption>Existing mark / supplied reference</figcaption>
+          </figure>
         </aside>
       </section>
 
