@@ -43,14 +43,6 @@ function ArchMotif({ className = '' }: { className?: string }) {
   )
 }
 
-function ArchGrid() {
-  return (
-    <div className="qantra-pattern-grid" aria-hidden="true">
-      {Array.from({ length: 18 }).map((_, i) => <span key={i} className="qantra-pattern-arch" />)}
-    </div>
-  )
-}
-
 export default function QantraPage() {
   const rootRef = useRef<HTMLElement>(null)
   const [voice, setVoice] = useState<VoiceId>('editorial')
@@ -68,70 +60,64 @@ export default function QantraPage() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.qantra-hero-copy > *',
-        { y: 34, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.09, ease: 'power3.out' },
+        { y: 28, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.95, stagger: 0.08, ease: 'power3.out' },
       )
 
       gsap.fromTo(
-        '.qantra-hero-portal',
-        { scale: 0.9, yPercent: 8, opacity: 0 },
-        { scale: 1, yPercent: 0, opacity: 1, duration: 1.35, ease: 'power3.out', delay: 0.12 },
-      )
-
-      gsap.to('.qantra-hero-portal', {
-        scale: 1.14,
-        yPercent: -6,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.qantra-hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.6,
+        '.qantra-hero-media img',
+        { scale: 1.035 },
+        {
+          scale: 1.1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.qantra-hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 0.65,
+          },
         },
-      })
+      )
 
       gsap.utils.toArray('.qantra-reveal').forEach((element: any) => {
         gsap.fromTo(
           element,
-          { y: 42, opacity: 0 },
+          { y: 36, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.9,
+            duration: 0.85,
             ease: 'power3.out',
-            scrollTrigger: { trigger: element, start: 'top 84%', once: true },
+            scrollTrigger: { trigger: element, start: 'top 86%', once: true },
           },
         )
       })
 
-      gsap.fromTo(
-        '.qantra-architecture-sheet',
-        { y: 70, rotate: 1.2 },
-        {
-          y: -16,
-          rotate: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.qantra-architecture',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.7,
+      gsap.utils.toArray('.qantra-application-image').forEach((element: any) => {
+        gsap.fromTo(
+          element,
+          { y: 28, opacity: 0, scale: 0.985 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: element, start: 'top 90%', once: true },
           },
-        },
-      )
+        )
+      })
 
-      gsap.fromTo(
-        '.qantra-application-image',
-        { scale: 0.975, opacity: 0.72 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.85,
-          ease: 'power2.out',
-          stagger: 0.08,
-          scrollTrigger: { trigger: '.qantra-applications', start: 'top 72%', once: true },
+      gsap.to('.qantra-closing-media img', {
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.qantra-closing',
+          start: 'top bottom',
+          end: 'bottom bottom',
+          scrub: 0.6,
         },
-      )
+      })
     }, rootRef)
 
     return () => {
@@ -156,12 +142,10 @@ export default function QantraPage() {
       </header>
 
       <section className="qantra-hero" aria-labelledby="qantra-title">
-        <div className="qantra-hero-portal" aria-hidden="true">
-          <div className="qantra-portal-line qantra-portal-line-one" />
-          <div className="qantra-portal-line qantra-portal-line-two" />
-          <div className="qantra-portal-line qantra-portal-line-three" />
+        <div className="qantra-hero-media" aria-hidden="true">
+          <img src={asset('hero-arches')} alt="" width="1672" height="941" fetchPriority="high" />
         </div>
-        <div className="qantra-hero-grain" aria-hidden="true" />
+        <div className="qantra-hero-shade" aria-hidden="true" />
 
         <div className="qantra-hero-topline">
           <span>مشروع تصوري مستقل · دمشق · 2026</span>
@@ -171,7 +155,7 @@ export default function QantraPage() {
         <div className="qantra-hero-copy">
           <p className="qantra-kicker">مكتبة · مساحة قراءة · نادي ثقافي</p>
           <h1 id="qantra-title">قنطرة</h1>
-          <p className="qantra-hero-line">بين كتابٍ وقارئ، <em>قنطرة.</em></p>
+          <p className="qantra-hero-line">بين كتابٍ وقارئ، قنطرة.</p>
           <a className="qantra-scroll-link" href="#qantra-story">اكتشف الفكرة <span aria-hidden="true">↓</span></a>
         </div>
 
@@ -193,7 +177,7 @@ export default function QantraPage() {
           <span>ملاحظة</span>
           <p>الشعار موجود مسبقاً ولم يتم تقديمه هنا كتصميم من عملي.</p>
           <figure className="qantra-existing-mark">
-            <img src={asset('logo')} alt="الشعار الموجود مسبقاً لمكتبة قنطرة" width="640" height="640" loading="lazy" />
+            <img src={asset('logo-reference')} alt="الشعار الموجود مسبقاً لمكتبة قنطرة" width="1254" height="1254" loading="lazy" />
             <figcaption>Existing mark / supplied reference</figcaption>
           </figure>
         </aside>
@@ -220,13 +204,13 @@ export default function QantraPage() {
         <div className="qantra-architecture-copy">
           <div className="qantra-section-index qantra-reveal">02 / من العمارة إلى الهوية</div>
           <h2 className="qantra-reveal">القوس ليس زينة.<br /><em>إنه بنية.</em></h2>
-          <p className="qantra-reveal">استُلهمت الفكرة من الإيقاع المعماري الدمشقي، ثم جرى اختزالها إلى قوس واسع ومستدير يعمل كإطار، نافذة، مسار ونظام تكرار. عمداً ابتعدنا عن القوس المدبب المركزي حتى لا يتحول الرمز إلى محراب بصري.</p>
+          <p className="qantra-reveal">استُلهمت الفكرة من الإيقاع المعماري الدمشقي، ثم جرى اختزالها إلى قوس يعمل كإطار، نافذة، مسار ونظام تكرار. القوس هنا جزء من البناء البصري، لا رمزاً زخرفياً مستقلاً.</p>
           <div className="qantra-arch-functions qantra-reveal">
             <span>FRAME</span><span>PASSAGE</span><span>STRUCTURE</span><span>RHYTHM</span>
           </div>
         </div>
         <figure className="qantra-architecture-sheet qantra-reveal">
-          <img src={asset('arch-system')} alt="لوحة تطوير القوس في هوية قنطرة من مرجع معماري إلى نظام تجريدي" width="1100" height="733" />
+          <img src={asset('arch-system')} alt="لوحة تطوير القوس في هوية قنطرة من مرجع معماري إلى نظام تجريدي" width="1100" height="733" loading="lazy" />
           <figcaption>Arch development study · AI-assisted presentation visualization</figcaption>
         </figure>
       </section>
@@ -260,7 +244,7 @@ export default function QantraPage() {
           <div className="qantra-type-notes">
             <div><span>Display exploration</span><strong>29LT Riwaya</strong></div>
             <div><span>Supporting exploration</span><strong>29LT Idris</strong></div>
-            <p>في الصفحة الرقمية نحافظ على الإحساس التحريري بخط عربي مفتوح المصدر، مع إبقاء اختيار الخط التجاري كجزء من استكشاف الهوية لا كادعاء ترخيص للويب.</p>
+            <p>في الصفحة الرقمية نحافظ على الإحساس التحريري بخط عربي مفتوح المصدر، مع إبقاء اختيار الخط التجاري كجزء من استكشاف الهوية.</p>
           </div>
         </div>
       </section>
@@ -269,11 +253,17 @@ export default function QantraPage() {
         <div className="qantra-pattern-copy qantra-reveal">
           <div className="qantra-section-index">04 / لغة القوس</div>
           <h2>من قوس واحد،<br />إلى <em>إيقاع كامل.</em></h2>
-          <p>النمط الأساسي يكرر القوس كنبض معماري. لا يحتاج النبات، ولا الأرابيسك، ولا أي رمز تراثي جاهز كي يقول دمشق.</p>
+          <p>النمط الأساسي يكرر القوس كنبض معماري. استخدمنا النسختين الداكنة والفاتحة حتى يبقى النظام مرناً بين المساحات التحريرية والتطبيقات الجريئة.</p>
         </div>
-        <div className="qantra-pattern-stage qantra-reveal">
-          <ArchGrid />
-          <div className="qantra-pattern-label"><span>PATTERN 01</span><strong>Rhythmical Arch</strong></div>
+        <div className="qantra-pattern-gallery">
+          <figure className="qantra-pattern-figure qantra-application-image">
+            <img src={asset('pattern-navy')} alt="نمط قنطرة بخلفية كحلية وخطوط ذهبية" width="1672" height="941" loading="lazy" />
+            <figcaption><span>Pattern 01 / Navy</span><strong>Rhythmical Arch</strong></figcaption>
+          </figure>
+          <figure className="qantra-pattern-figure qantra-application-image">
+            <img src={asset('pattern-ivory')} alt="نسخة فاتحة من نمط قنطرة بأقواس كحلية" width="1672" height="941" loading="lazy" />
+            <figcaption><span>Pattern 01 / Ivory</span><strong>Reverse system</strong></figcaption>
+          </figure>
         </div>
       </section>
 
@@ -314,34 +304,72 @@ export default function QantraPage() {
       <section className="qantra-applications" aria-labelledby="qantra-app-title">
         <div className="qantra-app-intro qantra-reveal">
           <div className="qantra-section-index">06 / الهوية في الاستخدام</div>
-          <h2 id="qantra-app-title">حين تتحول القاعدة<br />إلى <em>شيء يُحمل ويُهدى.</em></h2>
+          <h2 id="qantra-app-title">حين تتحول القاعدة<br />إلى <em>شيء يُقرأ ويُحمل ويُهدى.</em></h2>
           <p>الموكابات التالية تصورات مولدة بالذكاء الاصطناعي لتجربة التطبيقات، بينما يعتمد النظام البصري نفسه على القواعد المطورة في المشروع.</p>
         </div>
 
-        <figure className="qantra-application-image qantra-poster-series">
-          <img src={asset('poster-series')} alt="سلسلة ملصقات قنطرة: نادي القراءة، أمسية ثقافية، وإطلاق كتاب" width="1400" height="566" loading="lazy" />
-          <figcaption><span>Cultural poster series</span><strong>نادي القراءة · أمسية ثقافية · إطلاق كتاب</strong></figcaption>
-        </figure>
-
-        <div className="qantra-objects qantra-section">
-          <figure className="qantra-application-image qantra-object qantra-object-bookmark">
-            <img src={asset('bookmarks')} alt="مجموعة فواصل كتب لهوية قنطرة" width="800" height="1000" loading="lazy" />
-            <figcaption><span>Bookmarks</span><strong>القوس كرفيق داخل الكتاب</strong></figcaption>
-          </figure>
-          <figure className="qantra-application-image qantra-object qantra-object-tote">
-            <img src={asset('tote-system')} alt="تطبيقات حقيبة قماشية وأنماط لهوية قنطرة" width="1100" height="733" loading="lazy" />
-            <figcaption><span>Tote system</span><strong>Pattern × bold cropped arch</strong></figcaption>
-          </figure>
+        <div className="qantra-application-group qantra-posters-group">
+          <div className="qantra-group-heading qantra-reveal"><span>01</span><h3>الملصقات الثقافية</h3><p>Poster System</p></div>
+          <div className="qantra-poster-grid">
+            <figure className="qantra-application-image qantra-tall-card">
+              <img src={asset('poster-launch')} alt="ملصق إطلاق كتاب ضمن نظام قنطرة البصري" width="1122" height="1402" loading="lazy" />
+              <figcaption><span>Book launch</span><strong>طاقة أعلى للفعاليات</strong></figcaption>
+            </figure>
+            <figure className="qantra-application-image qantra-tall-card">
+              <img src={asset('poster-reading')} alt="ملصق نادي القراءة ضمن نظام قنطرة البصري" width="1122" height="1402" loading="lazy" />
+              <figcaption><span>Reading club</span><strong>صوت تحريري أكثر هدوءاً</strong></figcaption>
+            </figure>
+          </div>
         </div>
 
-        <figure className="qantra-application-image qantra-packaging qantra-reveal">
-          <img src={asset('gift-packaging')} alt="نظام تغليف هدايا الكتب لقنطرة" width="1100" height="733" loading="lazy" />
-          <figcaption><span>Gift packaging system</span><strong>ورق تغليف · Belly band · صندوق هدية · بطاقة</strong></figcaption>
-        </figure>
+        <div className="qantra-application-group qantra-bookmarks-group">
+          <div className="qantra-group-heading qantra-reveal"><span>02</span><h3>فواصل الكتب</h3><p>Bookmark Collection</p></div>
+          <div className="qantra-bookmark-grid">
+            <figure className="qantra-application-image qantra-tall-card">
+              <img src={asset('bookmark-cultural')} alt="فاصل كتاب قنطرة بأسلوب ثقافي جريء" width="1122" height="1402" loading="lazy" />
+              <figcaption><span>Cultural</span><strong>Terracotta × Type</strong></figcaption>
+            </figure>
+            <figure className="qantra-application-image qantra-tall-card">
+              <img src={asset('bookmark-arch')} alt="فاصل كتاب قنطرة بقوس معماري" width="1122" height="1402" loading="lazy" />
+              <figcaption><span>Architectural</span><strong>Arch frame</strong></figcaption>
+            </figure>
+            <figure className="qantra-application-image qantra-tall-card">
+              <img src={asset('bookmark-pattern')} alt="فاصل كتاب قنطرة بنمط الأقواس" width="1122" height="1402" loading="lazy" />
+              <figcaption><span>Pattern</span><strong>Rhythmical system</strong></figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div className="qantra-application-group qantra-packaging-group">
+          <div className="qantra-group-heading qantra-reveal"><span>03</span><h3>نظام تغليف الهدايا</h3><p>Gift Packaging System</p></div>
+          <figure className="qantra-application-image qantra-wide-board">
+            <img src={asset('packaging-system')} alt="نظام تغليف هدايا قنطرة بصندوق وورق تغليف وبطاقات" width="1536" height="1024" loading="lazy" />
+            <figcaption><span>System overview</span><strong>Wrapping paper · Sleeve · Gift box · Tag</strong></figcaption>
+          </figure>
+
+          <div className="qantra-packaging-pair">
+            <figure className="qantra-application-image qantra-wide-board">
+              <img src={asset('packaging-board')} alt="مجموعة تطبيقات تغليف هدايا قنطرة بتفاصيل المواد" width="1536" height="1024" loading="lazy" />
+              <figcaption><span>Material study</span><strong>Paper × Navy × Gold</strong></figcaption>
+            </figure>
+            <figure className="qantra-application-image qantra-tall-card">
+              <img src={asset('gift-box-board')} alt="عرض صندوق هدية قنطرة وتفاصيل الختم والبطاقة" width="1122" height="1402" loading="lazy" />
+              <figcaption><span>Editorial gift box</span><strong>Detail board</strong></figcaption>
+            </figure>
+          </div>
+
+          <figure className="qantra-application-image qantra-gift-wrap-card">
+            <img src={asset('gift-wrap')} alt="تطبيق تغليف كتاب بسيط لهوية قنطرة" width="1122" height="1402" loading="lazy" />
+            <figcaption><span>Minimal gift wrap</span><strong>هدية بسيطة، وهوية واضحة</strong></figcaption>
+          </figure>
+        </div>
       </section>
 
       <section className="qantra-closing">
-        <ArchMotif className="qantra-closing-arch" />
+        <div className="qantra-closing-media" aria-hidden="true">
+          <img src={asset('closing-hero')} alt="" width="1672" height="941" loading="lazy" />
+        </div>
+        <div className="qantra-closing-shade" aria-hidden="true" />
         <div className="qantra-closing-copy qantra-reveal">
           <span>QANTRA / 2026</span>
           <p>بين كتابٍ وقارئ،</p>
