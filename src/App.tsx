@@ -12,6 +12,30 @@ import IntroLoader from './components/IntroLoader'
 const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`
 const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
 const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
+const GMAIL_COMPOSE_URL = 'https://mail.google.com/mail/?view=cm&fs=1&to=7amzaqady%40gmail.com'
+const GMAIL_ANDROID_INTENT = `intent:7amzaqady@gmail.com#Intent;scheme=mailto;action=android.intent.action.SENDTO;package=com.google.android.gm;S.browser_fallback_url=${encodeURIComponent(GMAIL_COMPOSE_URL)};end`
+
+function openGmailCompose() {
+  const userAgent = navigator.userAgent
+  if (/Android/i.test(userAgent)) {
+    try { window.location.assign(GMAIL_ANDROID_INTENT) }
+    catch { window.location.assign(GMAIL_COMPOSE_URL) }
+    return
+  }
+  if (/iPhone|iPad|iPod/i.test(userAgent)) {
+    let appOpened = false
+    const onVisibilityChange = () => { if (document.hidden) appOpened = true }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    try { window.location.assign('googlegmail:///co?to=7amzaqady%40gmail.com') }
+    catch { document.removeEventListener('visibilitychange', onVisibilityChange); window.location.assign(GMAIL_COMPOSE_URL); return }
+    window.setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      if (!appOpened && !document.hidden) window.location.assign(GMAIL_COMPOSE_URL)
+    }, 1800)
+    return
+  }
+  window.location.assign(GMAIL_COMPOSE_URL)
+}
 
 const Galaxy = lazy(() => import('./components/Galaxy'))
 const BloomsPage = lazy(() => import('./pages/BloomsPage'))
@@ -449,7 +473,7 @@ function Contact() {
                 proximity={260}
                 autoAnimate={false}
                 className="contact-specular-cta"
-                onClick={() => { window.location.assign('https://mail.google.com/mail/?view=cm&fs=1&to=7amzaqady%40gmail.com') }}
+                onClick={openGmailCompose}
               >
                 <span className="inline-flex items-center gap-3">
                   Start a conversation
@@ -459,7 +483,7 @@ function Contact() {
             </div>
           </div>
           <div className="mt-16 grid gap-6 border-t border-primary/20 pt-6 sm:grid-cols-2 lg:mt-24">
-            <a className="group flex flex-col gap-2" href="https://mail.google.com/mail/?view=cm&fs=1&to=7amzaqady%40gmail.com" aria-label="Email Hamza at 7amzaqady@gmail.com">
+            <a className="group flex flex-col gap-2" href={GMAIL_COMPOSE_URL} onClick={(event) => { event.preventDefault(); openGmailCompose() }} aria-label="Email Hamza at 7amzaqady@gmail.com">
               <span className="text-[10px] uppercase tracking-[0.3em] text-primary/45">Email</span>
               <span className="break-all text-lg font-medium text-primary transition-colors group-hover:text-[#E8C59B] sm:text-xl">7amzaqady@gmail.com <span aria-hidden="true">↗</span></span>
             </a>
