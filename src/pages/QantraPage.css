@@ -71,7 +71,7 @@
 .qantra-context-note span{display:block;font-size:9px;letter-spacing:.13em;color:var(--terra);margin:0 0 8px}
 .qantra-context-note p{font-size:12px;line-height:1.8;color:var(--muted);margin:0 0 30px}
 .qantra-existing-mark{margin-top:24px;padding-top:18px;border-top:1px solid rgba(14,42,71,.14)}
-.qantra-existing-mark img{width:100%;max-width:150px;aspect-ratio:1;object-fit:cover;border-radius:2px}
+.qantra-existing-mark img{width:100%;max-width:150px;aspect-ratio:1;object-fit:contain;border-radius:2px;display:block}
 .qantra-existing-mark figcaption{margin-top:9px;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);direction:ltr;text-align:left}
 
 .qantra-passage{background:var(--navy-deep);color:var(--ivory);padding:clamp(90px,12vw,180px) clamp(22px,6vw,104px);position:relative;overflow:hidden}
