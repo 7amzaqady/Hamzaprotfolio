@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import cultural0 from '../data/qantra/cultural.0.txt?raw'
@@ -24,42 +24,6 @@ const QANTRA_POSTER_CULTURAL = 'data:image/webp;base64,' + cultural0 + cultural1
 const QANTRA_POSTER_LAUNCH = 'data:image/webp;base64,' + launch0 + launch1 + launch2 + launch3
 const QANTRA_POSTER_READING = 'data:image/webp;base64,' + reading0 + reading1 + reading2
 
-const voices = [
-  {
-    id: 'editorial',
-    label: 'تحريري',
-    en: 'Editorial',
-    title: 'الكلمة هي البطل',
-    copy: 'مساحات هادئة، عناوين عربية كبيرة، وإيقاع يترك للفكرة وقتها قبل أن يطلب من القوس أن يتكلم.',
-  },
-  {
-    id: 'architectural',
-    label: 'معماري',
-    en: 'Architectural',
-    title: 'القوس يبني الصفحة',
-    copy: 'هنا يصبح القوس إطاراً ومحوراً وشبكة. لا يعمل كزخرفة، بل كمنطق يحدد النسب والحركة والفراغ.',
-  },
-  {
-    id: 'cultural',
-    label: 'ثقافي',
-    en: 'Cultural Poster',
-    title: 'صوت أعلى للفعاليات',
-    copy: 'أحجام طباعية أكثر جرأة، Terracotta أوضح، وحركة أسرع مع بقاء القواعد البصرية نفسها.',
-  },
-] as const
-
-type VoiceId = typeof voices[number]['id']
-
-function ArchMotif({ className = '' }: { className?: string }) {
-  return (
-    <div className={'qantra-arch-motif ' + className} aria-hidden="true">
-      <span />
-      <span />
-      <span />
-    </div>
-  )
-}
-
 function ArchGrid() {
   return (
     <div className="qantra-pattern-grid" aria-hidden="true">
@@ -70,8 +34,6 @@ function ArchGrid() {
 
 export default function QantraPage() {
   const rootRef = useRef<HTMLElement>(null)
-  const [voice, setVoice] = useState<VoiceId>('editorial')
-  const currentVoice = voices.find((item) => item.id === voice) ?? voices[0]
 
   useEffect(() => {
     const previousTitle = document.title
@@ -299,38 +261,9 @@ export default function QantraPage() {
         </div>
       </section>
 
-      <section className="qantra-voices qantra-section">
-        <div className="qantra-voices-copy qantra-reveal">
-          <div className="qantra-section-index">05 / هوية واحدة، ثلاثة أصوات</div>
-          <h2>نظام واحد.<br /><em>ثلاث درجات من الطاقة.</em></h2>
-        </div>
-
-        <div className="qantra-voice-controls qantra-reveal" role="group" aria-label="اختيار أسلوب الهوية">
-          {voices.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              className={voice === item.id ? 'is-active' : ''}
-              aria-pressed={voice === item.id}
-              onClick={() => setVoice(item.id)}
-            >
-              <span>{item.label}</span><small>{item.en}</small>
-            </button>
-          ))}
-        </div>
-
-        <div className={'qantra-voice-preview is-' + voice} aria-live="polite">
-          <div className="qantra-voice-visual" aria-hidden="true">
-            <ArchMotif />
-            <span className="qantra-voice-word">{voice === 'cultural' ? 'إطلاق' : voice === 'architectural' ? 'قنطرة' : 'اقرأ'}</span>
-            <span className="qantra-voice-block" />
-          </div>
-          <div className="qantra-voice-text">
-            <span>{currentVoice.en}</span>
-            <h3>{currentVoice.title}</h3>
-            <p>{currentVoice.copy}</p>
-          </div>
-        </div>
+      <section className="qantra-pattern-gallery" aria-label="نمط القوس في نسختين لونية">
+        <img src={asset('pattern-ivory')} alt="نمط أقواس قنطرة باللون الكحلي على خلفية عاجية" width="1672" height="941" loading="lazy" />
+        <img src={asset('pattern-navy')} alt="نمط أقواس قنطرة بخطوط ذهبية على خلفية كحلية" width="1672" height="941" loading="lazy" />
       </section>
 
       <section className="qantra-applications" aria-labelledby="qantra-app-title">

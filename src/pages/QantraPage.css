@@ -26,7 +26,7 @@
 .qantra-page a{color:inherit;text-decoration:none}
 .qantra-page button{font:inherit}
 .qantra-page h1,.qantra-page h2,.qantra-page h3,.qantra-page em,.qantra-type-display p,.qantra-closing-copy p{font-family:'Luxury Qantra','Noto Naskh Arabic',Georgia,serif;font-weight:400}
-.qantra-nav,.qantra-hero-topline,.qantra-kicker,.qantra-scroll-link,.qantra-hero-foot,.qantra-section-index,.qantra-context-note,.qantra-arch-functions,.qantra-pattern-label,.qantra-voice-controls button small,.qantra-voice-text>span,.qantra-poster-series figcaption,.qantra-object figcaption,.qantra-packaging figcaption,.qantra-closing-links{font-family:'Almarai',sans-serif}
+.qantra-nav,.qantra-hero-topline,.qantra-kicker,.qantra-scroll-link,.qantra-hero-foot,.qantra-section-index,.qantra-context-note,.qantra-arch-functions,.qantra-pattern-label,.qantra-poster-series figcaption,.qantra-object figcaption,.qantra-packaging figcaption,.qantra-closing-links{font-family:'Almarai',sans-serif}
 .qantra-page h1,.qantra-page h2,.qantra-page h3,.qantra-page p{margin-top:0}
 .qantra-page em{font-style:normal;color:var(--terra)}
 .qantra-page ::selection{background:var(--gold);color:var(--navy-deep)}
@@ -65,7 +65,7 @@
 .qantra-section{padding:clamp(78px,10vw,150px) clamp(22px,6vw,104px);max-width:1700px;margin:0 auto}
 .qantra-section-index{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--terra)}
 .qantra-context{display:grid;grid-template-columns:minmax(120px,.55fr) minmax(0,2.3fr) minmax(220px,.8fr);gap:clamp(32px,6vw,100px);align-items:start}
-.qantra-context-main h2,.qantra-section-heading h2,.qantra-architecture h2,.qantra-pattern-copy h2,.qantra-voices h2,.qantra-app-intro h2{font-family:'Luxury Qantra','Noto Naskh Arabic',Georgia,serif;font-weight:400;font-size:clamp(48px,6vw,92px);line-height:1.08;letter-spacing:0;margin:0 0 38px;color:var(--navy);text-wrap:balance}
+.qantra-context-main h2,.qantra-section-heading h2,.qantra-architecture h2,.qantra-pattern-copy h2,.qantra-app-intro h2{font-family:'Luxury Qantra','Noto Naskh Arabic',Georgia,serif;font-weight:400;font-size:clamp(48px,6vw,92px);line-height:1.08;letter-spacing:0;margin:0 0 38px;color:var(--navy);text-wrap:balance}
 .qantra-lede{max-width:760px;font-size:clamp(18px,1.7vw,25px);line-height:2;color:#4f4942;font-weight:400}
 .qantra-context-note{border-top:1px solid rgba(14,42,71,.22);padding-top:18px}
 .qantra-context-note span{display:block;font-size:9px;letter-spacing:.13em;color:var(--terra);margin:0 0 8px}
@@ -128,32 +128,8 @@
 .qantra-pattern-label span{display:block;font-size:8px;letter-spacing:.16em;color:var(--terra);margin-bottom:6px}
 .qantra-pattern-label strong{font-family:Georgia,serif;font-size:20px;font-weight:400}
 
-.qantra-voices-copy{display:grid;grid-template-columns:.55fr 2fr;gap:40px;margin-bottom:50px}
-.qantra-voices-copy h2{margin:0}
-.qantra-voice-controls{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(14,42,71,.16);border-bottom:1px solid rgba(14,42,71,.16);margin-bottom:34px}
-.qantra-voice-controls button{appearance:none;border:0;border-left:1px solid rgba(14,42,71,.16);background:transparent;color:var(--navy);padding:20px 18px;min-height:76px;cursor:pointer;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;transition:background .25s,color .25s,transform .12s}
-.qantra-voice-controls button:last-child{border-left:0}
-.qantra-voice-controls button:active{transform:scale(.985)}
-.qantra-voice-controls button.is-active{background:var(--navy);color:var(--ivory)}
-.qantra-voice-controls button span{font-family:'Luxury Qantra','Noto Naskh Arabic',serif;font-size:29px}
-.qantra-voice-controls button small{font-size:8px;letter-spacing:.13em;opacity:.55;direction:ltr}
-.qantra-voice-preview{display:grid;grid-template-columns:1.35fr .65fr;min-height:570px;background:var(--navy);color:var(--ivory);overflow:hidden;transition:background .35s cubic-bezier(.16,1,.3,1)}
-.qantra-voice-preview.is-cultural{background:var(--terra)}
-.qantra-voice-preview.is-architectural{background:#173857}
-.qantra-voice-visual{position:relative;overflow:hidden;min-height:570px}
-.qantra-arch-motif{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-.qantra-arch-motif span{position:absolute;bottom:-16%;left:12%;border:2px solid rgba(248,245,238,.75);border-bottom:0;border-radius:999px 999px 0 0/58% 58% 0 0}
-.qantra-arch-motif span:nth-child(1){width:84%;height:96%}
-.qantra-arch-motif span:nth-child(2){width:58%;height:76%;left:25%;opacity:.62}
-.qantra-arch-motif span:nth-child(3){width:34%;height:57%;left:37%;opacity:.4}
-.qantra-voice-word{position:absolute;right:7%;bottom:3%;font-family:'Luxury Qantra','Noto Naskh Arabic',serif;font-size:clamp(100px,15vw,230px);line-height:.9;letter-spacing:0;color:var(--ivory);z-index:2}
-.qantra-voice-block{position:absolute;width:18%;height:28%;left:9%;top:10%;background:var(--gold)}
-.is-cultural .qantra-voice-block{background:var(--navy)}
-.is-architectural .qantra-voice-block{background:var(--stone)}
-.qantra-voice-text{padding:50px;display:flex;flex-direction:column;justify-content:flex-end;border-right:1px solid rgba(248,245,238,.18)}
-.qantra-voice-text>span{font-size:9px;letter-spacing:.16em;opacity:.55;direction:ltr;text-align:left}
-.qantra-voice-text h3{font-size:clamp(34px,3vw,52px);line-height:1.12;margin:24px 0 20px;color:var(--ivory)}
-.qantra-voice-text p{font-size:13px;line-height:1.9;color:rgba(248,245,238,.7);max-width:420px}
+.qantra-pattern-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));direction:ltr;background:var(--ivory)}
+.qantra-pattern-gallery img{display:block;width:100%;height:auto;aspect-ratio:1672/941;object-fit:contain}
 
 .qantra-applications{background:#ede8de;padding:clamp(90px,11vw,170px) 0 0}
 .qantra-app-intro{padding:0 clamp(22px,6vw,104px);max-width:1700px;margin:0 auto 70px;display:grid;grid-template-columns:.55fr 1.6fr .55fr;gap:40px;align-items:start}
@@ -295,12 +271,12 @@
   .qantra-nav{padding:18px 18px}.qantra-back span:last-child{display:none}.qantra-nav-title small{display:none}
   .qantra-hero{padding:96px 20px 30px;min-height:100svh}.qantra-hero-topline{top:78px;left:20px;right:20px;display:block}.qantra-hero-topline span:last-child{display:none}
   .qantra-hero-image{inset:0;width:100%!important;height:100%!important;object-position:58% center}.qantra-hero-image-overlay{background:linear-gradient(0deg,rgba(8,29,50,.82) 0%,rgba(8,29,50,.25) 52%,rgba(8,29,50,.32) 100%)}.qantra-hero-copy{margin-right:0;padding-bottom:30px}.qantra-hero h1{font-size:clamp(72px,23vw,118px);line-height:.9}.qantra-hero-line{font-size:30px;margin-top:18px}.qantra-scroll-link{margin-top:35px}.qantra-hero-foot{display:none}
-  .qantra-section{padding:72px 20px}.qantra-context{grid-template-columns:1fr;gap:24px}.qantra-context-note{grid-column:auto}.qantra-context-main h2,.qantra-section-heading h2,.qantra-architecture h2,.qantra-pattern-copy h2,.qantra-voices h2,.qantra-app-intro h2{font-size:54px;line-height:.98}.qantra-lede{font-size:17px;line-height:1.85}
+  .qantra-section{padding:72px 20px}.qantra-context{grid-template-columns:1fr;gap:24px}.qantra-context-note{grid-column:auto}.qantra-context-main h2,.qantra-section-heading h2,.qantra-architecture h2,.qantra-pattern-copy h2,.qantra-app-intro h2{font-size:54px;line-height:.98}.qantra-lede{font-size:17px;line-height:1.85}
   .qantra-passage{padding:78px 20px}.qantra-passage-copy{display:block}.qantra-passage-copy h2{font-size:58px;margin-top:15px}.qantra-passage-flow{grid-template-columns:1fr 1fr}.qantra-passage-step{min-height:160px;border-bottom:1px solid rgba(248,245,238,.15)}.qantra-passage-step strong{font-size:44px}.qantra-passage-step i{display:none}
   .qantra-architecture{gap:28px}.qantra-arch-functions{gap:5px}.qantra-architecture-sheet{padding:7px}
-  .qantra-section-heading,.qantra-voices-copy{grid-template-columns:1fr;gap:22px}.qantra-color-system{grid-template-columns:1fr 1fr}.qantra-swatch{min-height:150px}.qantra-type-display,.qantra-type-notes{padding:32px 20px}.qantra-type-display{min-height:250px}.qantra-type-display p{font-size:120px}.qantra-type-notes strong{font-size:22px}
+  .qantra-section-heading{grid-template-columns:1fr;gap:22px}.qantra-color-system{grid-template-columns:1fr 1fr}.qantra-swatch{min-height:150px}.qantra-type-display,.qantra-type-notes{padding:32px 20px}.qantra-type-display{min-height:250px}.qantra-type-display p{font-size:120px}.qantra-type-notes strong{font-size:22px}
   .qantra-pattern-section{min-height:auto}.qantra-pattern-copy{padding:72px 20px}.qantra-pattern-stage{min-height:520px}.qantra-pattern-grid{grid-template-columns:repeat(4,1fr);gap:11px}.qantra-pattern-arch{min-height:135px}
-  .qantra-voice-controls{grid-template-columns:1fr}.qantra-voice-controls button{border-left:0;border-bottom:1px solid rgba(14,42,71,.16);min-height:64px}.qantra-voice-preview{grid-template-columns:1fr;min-height:auto}.qantra-voice-visual{min-height:420px}.qantra-voice-word{font-size:150px}.qantra-voice-text{border-right:0;border-top:1px solid rgba(248,245,238,.18);padding:30px 22px 40px}
+  .qantra-pattern-gallery{grid-template-columns:1fr}
   .qantra-applications{padding-top:78px}.qantra-app-intro{padding:0 20px;grid-template-columns:1fr;gap:22px;margin-bottom:46px}.qantra-app-intro>p{grid-column:auto}.qantra-poster-series{margin:0 12px;padding:7px}.qantra-poster-grid{grid-template-columns:1fr;gap:8px}.qantra-poster-grid img{aspect-ratio:auto;height:auto}.qantra-poster-series figcaption{display:grid;gap:5px}.qantra-objects{grid-template-columns:1fr;padding-top:50px}.qantra-object-bookmark{justify-self:auto;max-width:none}.qantra-packaging{padding:0 12px 90px}
   .qantra-closing{min-height:88svh;padding:74px 20px 24px;display:flex;flex-direction:column;justify-content:flex-end;background-position:62% center}.qantra-closing::before{background:linear-gradient(0deg,rgba(7,27,47,.88) 0%,rgba(7,27,47,.42) 50%,rgba(7,27,47,.18) 100%)}.qantra-closing-copy{width:min(100%,520px);margin:0 0 58px;align-self:flex-start;text-align:right}.qantra-closing-copy>span{margin-bottom:16px}.qantra-closing-copy p{font-size:28px}.qantra-closing-copy h2{font-size:78px;line-height:1}.qantra-closing-copy i{margin-top:20px}.qantra-closing-links{width:100%;font-size:10px}
 }
