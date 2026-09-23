@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import './ChromaSnapPage.css'
 
-const liveUrl = 'https://chromasnap-palette.sapyre-2377.chatgpt.site/'
+const liveUrl = `${import.meta.env.BASE_URL}chromasnap/`
 const colors = [
   { hex: '#1B2821', label: 'Forest' },
   { hex: '#C5A477', label: 'Sand' },
