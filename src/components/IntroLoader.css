@@ -1,0 +1,81 @@
+.intro-loader {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(24px, 4vw, 56px);
+  color: #e1e0cc;
+  background: radial-gradient(ellipse at 50% 48%, #202331 0%, #101219 37%, #07080c 74%);
+}
+
+.intro-loader__stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .58;
+  background-image: radial-gradient(1px 1px at 12% 20%, #fff 99%, transparent), radial-gradient(1px 1px at 74% 13%, #fff 99%, transparent), radial-gradient(2px 2px at 86% 71%, #fff 99%, transparent), radial-gradient(1px 1px at 28% 79%, #fff 99%, transparent), radial-gradient(1px 1px at 63% 58%, #fff 99%, transparent), radial-gradient(1px 1px at 45% 31%, #fff 99%, transparent);
+  background-size: 340px 290px;
+}
+
+.intro-loader__top,
+.intro-loader__bottom,
+.intro-loader__center { position: relative; z-index: 1; }
+
+.intro-loader__top,
+.intro-loader__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .2em;
+}
+
+.intro-loader__top > span:first-child { font-size: 15px; letter-spacing: -.02em; }
+.intro-loader__top > span:last-child { color: #e1e0cc88; }
+.intro-loader__dot { color: #c98c4b; }
+
+.intro-loader__center {
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.intro-loader__eyebrow,
+.intro-loader__caption { font-size: 10px; letter-spacing: .32em; color: #e1e0cc88; }
+.intro-loader__word {
+  display: block;
+  margin: 21px 0;
+  font-size: clamp(34px, 7vw, 100px);
+  font-weight: 700;
+  line-height: .95;
+  letter-spacing: -.065em;
+  animation: intro-word .45s both;
+}
+
+.intro-loader__bottom { width: min(100%, 560px); margin: 0 auto; }
+.intro-loader__labels { margin-bottom: 12px; color: #e1e0ccaa; }
+.intro-loader__track { height: 2px; background: #e1e0cc33; }
+.intro-loader__fill { height: 100%; background: #e8c59b; box-shadow: 0 0 14px #e8c59b99; transition: width .3s ease; }
+
+@keyframes intro-word {
+  from { opacity: 0; transform: translateY(12px); filter: blur(7px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@media (max-width: 480px) {
+  .intro-loader__top > span:last-child { display: none; }
+  .intro-loader__eyebrow,
+  .intro-loader__caption { font-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-loader__word { animation: none; }
+  .intro-loader__fill { transition: none; }
+}

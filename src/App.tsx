@@ -7,6 +7,7 @@ import BorderGlow from './components/BorderGlow'
 import SpecularButton from './components/SpecularButton'
 import FlowingMenu from './components/FlowingMenu'
 import GooeyNav from './components/GooeyNav'
+import IntroLoader from './components/IntroLoader'
 
 const HERO_VIDEO = `${import.meta.env.BASE_URL}astronauts-alien-garden-hero-1080p.mp4`
 const HERO_VIDEO_FALLBACK = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_170732_8a9ccda6-5cff-4628-b164-059c500a2b41.mp4?v=restore-20260918'
@@ -464,6 +465,7 @@ function Contact() {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     const hash = window.location.hash
     if (!hash) return
@@ -485,6 +487,7 @@ export default function App() {
   }
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
+      {isLoading && <IntroLoader onDone={() => setIsLoading(false)} />}
       <PortfolioGalaxy />
       <GlobalHeader />
       <div className="relative z-10">
