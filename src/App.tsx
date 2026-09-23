@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
-import { ArrowDownRight, ArrowRight, Check } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import FluidText from './components/FluidText'
 import CurtainReveal from './components/CurtainReveal'
@@ -15,6 +15,7 @@ const JELLYFISH_VIDEO = 'https://motionbgs.com/dl/hd/597'
 const Galaxy = lazy(() => import('./components/Galaxy'))
 const BloomsPage = lazy(() => import('./pages/BloomsPage'))
 const QantraPage = lazy(() => import('./pages/QantraPage'))
+const ChromaSnapPage = lazy(() => import('./pages/ChromaSnapPage'))
 
 const ease = [0.16, 1, 0.3, 1] as const
 
@@ -318,7 +319,7 @@ function About() {
 const projects = [
   { title: 'Blooms Book Store', type: 'Brand identity / Art direction', meta: '01' },
   { title: 'قنطرة', type: 'QANTRA / Visual Identity System', meta: '02' },
-  { title: 'Digital Experiments', type: 'Frontend / Motion / Creative coding', meta: '03' },
+  { title: 'ChromaSnap', type: 'Product design / Frontend development', meta: '03' },
 ]
 
 function Work() {
@@ -359,7 +360,7 @@ function Work() {
           </BorderGlow>
 
           {projects.map((project, idx) => (
-            <ProjectCard key={project.title} project={project} index={idx} />
+            <ProjectCard key={project.title} index={idx} />
           ))}
         </div>
       </div>
@@ -367,9 +368,7 @@ function Work() {
   )
 }
 
-function ProjectCard({ project, index }: { project: typeof projects[number]; index: number }) {
-  const ref = useRef<HTMLElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
+function ProjectCard({ index }: { index: number }) {
   if (index === 0) return (
     <a href="?project=blooms" className="group relative block min-h-[420px] overflow-hidden rounded-[24px] bg-[#103A2C] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#B77F7F] lg:h-full lg:min-h-0">
       <div className="absolute inset-x-0 top-0 bottom-[210px] flex items-center justify-center px-7">
@@ -397,66 +396,24 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
       </div>
     </a>
   )
-  const bullets = index === 0
-    ? ['Identity system', 'Packaging direction', 'Editorial brand language']
-    : index === 1
-      ? ['Symbol-led system', 'Architectural patterns', 'Print applications']
-      : ['React interfaces', 'Motion studies', 'Interactive prototypes']
-
   return (
-    <BorderGlow
-      className="min-h-[380px] md:min-h-[420px] lg:h-full lg:min-h-0"
-      edgeSensitivity={26}
-      glowColor="8 88 58"
-      backgroundColor={index === 1 ? "#0E2A47" : "#20201d"}
-      borderRadius={24}
-      glowRadius={28}
-      glowIntensity={0.8}
-      coneSpread={24}
-      animated={index === 0}
-      colors={['#ff4d3a', '#d0a96e', '#dedbc8']}
-      fillOpacity={0.16}
-    >
-      <motion.article
-        ref={ref}
-        initial={{ opacity: 0, scale: 0.96, y: 20 }}
-        animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
-        transition={{ duration: 0.7, delay: index * 0.12, ease }}
-        className={`group relative flex h-full min-h-[380px] flex-col justify-between overflow-hidden rounded-[23px] p-6 md:min-h-[420px] lg:min-h-0 ${index === 1 ? 'bg-[#0E2A47]' : 'bg-[#20201d]'}`}
-      >
-      {index === 1 && (
-        <>
-          <img
-            src={`${import.meta.env.BASE_URL}projects/qantra/card-pattern.webp`}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover opacity-75 transition-transform duration-700 group-hover:scale-[1.06]"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,18,32,.28)_0%,rgba(14,42,71,.60)_38%,rgba(5,17,29,.94)_100%)]" />
-          <a href="?project=qantra" className="absolute inset-0 z-20 rounded-[23px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#B89B5E]">
-            <span className="sr-only">Explore QANTRA case study</span>
-          </a>
-        </>
-      )}
-      <div className="relative z-10">
-        <div className="mb-10 flex items-start justify-between">
-          <span className={`text-5xl font-light tracking-[-0.06em] ${index === 1 ? 'text-[#D7C9B2]/70' : 'text-primary/20'}`}>{project.meta}</span>
-          <span className={`grid h-10 w-10 place-items-center rounded-full ${index === 1 ? 'bg-[#F8F5EE]/12 text-[#F8F5EE]' : 'bg-[#151513] text-primary'}`}><ArrowDownRight size={17} /></span>
-        </div>
-        <h3 className={`text-xl sm:text-2xl ${index === 1 ? 'text-[#F8F5EE] text-3xl font-bold' : 'text-[#E1E0CC]'}`}>{project.title}</h3>
-        <p className={`mt-2 text-sm ${index === 1 ? 'text-[#D7C9B2]' : 'text-primary/45'}`}>{project.type}</p>
+    <a href="?project=chromasnap" className="group relative flex min-h-[420px] flex-col justify-between overflow-hidden rounded-[24px] bg-[#F4F1E8] text-[#111111] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-[#FF5C35] lg:h-full lg:min-h-0">
+      <div className="flex items-start justify-between p-6 font-mono text-[11px] tracking-[.12em]">
+        <span>03 / DIGITAL PRODUCT</span><span>↗</span>
       </div>
-      <div className="relative z-10 space-y-3">
-        {bullets.map((bullet) => (
-          <div key={bullet} className={`flex items-center gap-2 text-xs sm:text-sm ${index === 1 ? 'text-[#F8F5EE]/82' : 'text-primary/60'}`}>
-            <Check size={14} className={index === 1 ? 'text-[#B89B5E]' : 'text-primary'} />
-            <span>{bullet}</span>
-          </div>
-        ))}
+      <div className="px-6 pb-5">
+        <div className="mb-5 flex items-center gap-2"><span className="h-5 w-5 rounded-full bg-[#FF5C35]" /><span className="-ml-3 mt-3 h-5 w-5 rounded-full bg-[#5D5FEF] mix-blend-multiply" /><span className="ml-1 text-sm font-extrabold leading-none tracking-[-.06em]">CHROMA<br />SNAP</span></div>
+        <p className="text-[clamp(2rem,2.5vw,3.5rem)] font-semibold leading-[.94] tracking-[-.04em]" style={{ wordSpacing: '.12em' }}>Find the colors<br />in any image.</p>
       </div>
-      </motion.article>
-    </BorderGlow>
+      <div className="flex h-32 w-full transition-[height] duration-500 group-hover:h-36" aria-hidden="true">
+        {['#1B2821', '#C5A477', '#E8DED1', '#70594D', '#A69A87'].map((color) => <span key={color} className="flex-1" style={{ backgroundColor: color }} />)}
+      </div>
+      <div className="p-6">
+        <h3 className="text-2xl font-semibold tracking-[-.04em]">ChromaSnap</h3>
+        <p className="mt-1 text-sm opacity-70">Product design / Frontend development</p>
+        <span className="mt-5 flex items-center justify-between border-t border-black/25 pt-4 text-sm font-semibold">Explore the project <ArrowRight size={20} /></span>
+      </div>
+    </a>
   )
 }
 
@@ -507,12 +464,24 @@ function Contact() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const hash = window.location.hash
+    if (!hash) return
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(hash.slice(1))?.scrollIntoView()
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
+
   const project = new URLSearchParams(window.location.search).get('project')
   if (project === 'blooms') {
     return <Suspense fallback={<main style={{ background: '#F8F5EE', color: '#103A2C', minHeight: '100vh', padding: '3rem' }}>Loading Blooms…</main>}><BloomsPage /></Suspense>
   }
   if (project === 'qantra') {
     return <Suspense fallback={<main style={{ background: '#0E2A47', color: '#F8F5EE', minHeight: '100vh', padding: '3rem' }}>Loading QANTRA…</main>}><QantraPage /></Suspense>
+  }
+  if (project === 'chromasnap') {
+    return <Suspense fallback={<main style={{ background: '#F4F1E8', color: '#111', minHeight: '100vh', padding: '3rem' }}>Loading ChromaSnap…</main>}><ChromaSnapPage /></Suspense>
   }
   return (
     <main className="relative overflow-x-clip bg-[#090909]">
