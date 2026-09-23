@@ -327,7 +327,11 @@ export default function QantraPage() {
         </div>
 
         <figure className="qantra-application-image qantra-poster-series">
-          <img src={asset('poster-series')} alt="سلسلة ملصقات قنطرة: نادي القراءة، أمسية ثقافية، وإطلاق كتاب" width="1400" height="566" loading="lazy" />
+          <div className="qantra-poster-grid">
+            <img src={asset('poster-reading')} alt="ملصق نادي القراءة لقنطرة" width="650" height="812" loading="lazy" />
+            <img src={asset('poster-cultural')} alt="ملصق أمسية ثقافية لقنطرة" width="650" height="812" loading="lazy" />
+            <img src={asset('poster-launch')} alt="ملصق إطلاق كتاب لقنطرة" width="650" height="812" loading="lazy" />
+          </div>
           <figcaption><span>Cultural poster series</span><strong>نادي القراءة · أمسية ثقافية · إطلاق كتاب</strong></figcaption>
         </figure>
 
