@@ -449,7 +449,7 @@ function Contact() {
                 proximity={260}
                 autoAnimate={false}
                 className="contact-specular-cta"
-                onClick={() => { window.location.href = 'mailto:7amzaqady@gmail.com' }}
+                onClick={() => { window.location.assign('https://mail.google.com/mail/?view=cm&fs=1&to=7amzaqady%40gmail.com') }}
               >
                 <span className="inline-flex items-center gap-3">
                   Start a conversation
