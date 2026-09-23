@@ -458,6 +458,16 @@ function Contact() {
               </SpecularButton>
             </div>
           </div>
+          <div className="mt-16 grid gap-6 border-t border-primary/20 pt-6 sm:grid-cols-2 lg:mt-24">
+            <a className="group flex flex-col gap-2" href="https://mail.google.com/mail/?view=cm&fs=1&to=7amzaqady%40gmail.com" aria-label="Email Hamza at 7amzaqady@gmail.com">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-primary/45">Email</span>
+              <span className="break-all text-lg font-medium text-primary transition-colors group-hover:text-[#E8C59B] sm:text-xl">7amzaqady@gmail.com <span aria-hidden="true">↗</span></span>
+            </a>
+            <a className="group flex flex-col gap-2" href="tel:+963993720719" aria-label="Call Hamza at +963 993 720 719">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-primary/45">Phone</span>
+              <span className="text-lg font-medium text-primary transition-colors group-hover:text-[#E8C59B] sm:text-xl" dir="ltr">+963 993 720 719 <span aria-hidden="true">↗</span></span>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
