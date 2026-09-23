@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import cultural0 from '../data/qantra/cultural.0.txt?raw'
+import cultural1 from '../data/qantra/cultural.1.txt?raw'
+import cultural2 from '../data/qantra/cultural.2.txt?raw'
+import cultural3 from '../data/qantra/cultural.3.txt?raw'
+import launch0 from '../data/qantra/launch.0.txt?raw'
+import launch1 from '../data/qantra/launch.1.txt?raw'
+import launch2 from '../data/qantra/launch.2.txt?raw'
+import launch3 from '../data/qantra/launch.3.txt?raw'
+import reading0 from '../data/qantra/reading.0.txt?raw'
+import reading1 from '../data/qantra/reading.1.txt?raw'
+import reading2 from '../data/qantra/reading.2.txt?raw'
 import './QantraPage.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -9,6 +20,9 @@ const asset = (name: string) => import.meta.env.BASE_URL + 'projects/qantra/' + 
 
 const QANTRA_HERO_IMAGE = asset('hero')
 const QANTRA_CLOSING_IMAGE = asset('closing')
+const QANTRA_POSTER_CULTURAL = 'data:image/webp;base64,' + cultural0 + cultural1 + cultural2 + cultural3
+const QANTRA_POSTER_LAUNCH = 'data:image/webp;base64,' + launch0 + launch1 + launch2 + launch3
+const QANTRA_POSTER_READING = 'data:image/webp;base64,' + reading0 + reading1 + reading2
 
 const voices = [
   {
@@ -328,9 +342,9 @@ export default function QantraPage() {
 
         <figure className="qantra-application-image qantra-poster-series">
           <div className="qantra-poster-grid">
-            <img src={asset('poster-reading')} alt="ملصق نادي القراءة لقنطرة" width="650" height="812" loading="lazy" />
-            <img src={asset('poster-cultural')} alt="ملصق أمسية ثقافية لقنطرة" width="650" height="812" loading="lazy" />
-            <img src={asset('poster-launch')} alt="ملصق إطلاق كتاب لقنطرة" width="650" height="812" loading="lazy" />
+            <img src={QANTRA_POSTER_READING} alt="ملصق نادي القراءة لقنطرة" width="650" height="812" loading="lazy" />
+            <img src={QANTRA_POSTER_CULTURAL} alt="ملصق أمسية ثقافية لقنطرة" width="650" height="812" loading="lazy" />
+            <img src={QANTRA_POSTER_LAUNCH} alt="ملصق إطلاق كتاب لقنطرة" width="650" height="812" loading="lazy" />
           </div>
           <figcaption><span>Cultural poster series</span><strong>نادي القراءة · أمسية ثقافية · إطلاق كتاب</strong></figcaption>
         </figure>
