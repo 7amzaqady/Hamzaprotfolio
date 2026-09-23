@@ -463,8 +463,8 @@ function Contact() {
               <span className="text-[10px] uppercase tracking-[0.3em] text-primary/45">Email</span>
               <span className="break-all text-lg font-medium text-primary transition-colors group-hover:text-[#E8C59B] sm:text-xl">7amzaqady@gmail.com <span aria-hidden="true">↗</span></span>
             </a>
-            <a className="group flex flex-col gap-2" href="tel:+963993720719" aria-label="Call Hamza at +963 993 720 719">
-              <span className="text-[10px] uppercase tracking-[0.3em] text-primary/45">Phone</span>
+            <a className="group flex flex-col gap-2" href="https://wa.me/963993720719" aria-label="Chat with Hamza on WhatsApp at +963 993 720 719">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-primary/45">WhatsApp</span>
               <span className="text-lg font-medium text-primary transition-colors group-hover:text-[#E8C59B] sm:text-xl" dir="ltr">+963 993 720 719 <span aria-hidden="true">↗</span></span>
             </a>
           </div>
