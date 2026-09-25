@@ -257,6 +257,7 @@
 }
 .qantra-closing-links a:hover{opacity:1;transform:translateY(-2px)}
 .qantra-closing-links a span{color:var(--gold)}
+.qantra-closing-links{flex-wrap:wrap}.qantra-closing-links a:first-child{color:var(--gold);opacity:1;font-weight:700}
 
 @media(max-width:1050px){
   .qantra-context{grid-template-columns:1fr 2fr}.qantra-context-note{grid-column:2}

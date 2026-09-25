@@ -209,7 +209,7 @@ function PortfolioGalaxy() {
 }
 
 function RotatingRole() {
-  const roles = ['Visual Designer', 'Brand Designer', 'Frontend Developer', 'Creative Coder']
+  const roles = ['Brand Designer', 'Frontend Developer']
   const [index, setIndex] = useState(0)
   const motionAllowed = useMotionAllowed()
 
@@ -303,15 +303,18 @@ function Hero() {
             </div>
 
             <div className="flex flex-col items-start gap-5 pb-1 lg:col-span-4 lg:pl-8">
-              <p className="max-w-md text-xs leading-[1.45] text-primary/70 sm:text-sm md:text-base">
-                Visual identity, creative direction and frontend experiments built with a cinematic eye and an obsession with detail.
+              <p className="max-w-md text-sm leading-[1.5] text-primary/80 sm:text-base">
+                I design distinctive brand identities and build responsive landing pages for independent businesses.
               </p>
-              <a href="#work" className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-primary py-1 pl-5 pr-1 text-sm font-bold text-[#090909] transition-transform active:scale-[.97]">
-                View selected work
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-[#090909] text-primary transition-transform duration-300 group-hover:rotate-[-45deg] group-hover:scale-105">
-                  <ArrowRight size={16} />
-                </span>
-              </a>
+              <div className="flex flex-wrap items-center gap-4">
+                <a href="#contact" className="group inline-flex min-h-11 items-center gap-2 rounded-full bg-primary py-1 pl-5 pr-1 text-sm font-bold text-[#090909] transition-transform active:scale-[.97]">
+                  Discuss your project
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-[#090909] text-primary transition-transform duration-300 group-hover:rotate-[-45deg] group-hover:scale-105">
+                    <ArrowRight size={16} />
+                  </span>
+                </a>
+                <a href="#work" className="text-sm text-primary underline decoration-primary/50 underline-offset-4 transition-colors hover:text-[#E8C59B]">View selected work</a>
+              </div>
             </div>
           </div>
         </div>
@@ -321,7 +324,7 @@ function Hero() {
 }
 
 function About() {
-  const body = 'I build identities and digital experiences that feel crafted, tactile and memorable — balancing visual storytelling with clean systems and practical code.'
+  const body = 'I create visual identities and landing pages that help independent businesses look credible, feel distinctive and give people a clear next step.'
 
   return (
     <section id="about" className="bg-transparent px-3 py-8 sm:px-4 md:px-6 md:py-12">
@@ -357,7 +360,7 @@ function Work() {
             <p className="mb-3 text-[10px] uppercase tracking-[0.32em] text-primary/50 sm:text-xs">Selected work / 02</p>
             <h2 className="max-w-3xl text-3xl leading-[1.02] text-[#E1E0CC] sm:text-4xl md:text-5xl lg:text-6xl">Projects built to feel like worlds, not templates.</h2>
           </div>
-          <p className="max-w-sm text-sm leading-6 text-primary/55">Brand systems, editorial direction and digital prototypes with a strong visual point of view.</p>
+          <p className="max-w-sm text-sm leading-6 text-primary/65">Explore brand identity concepts and a working digital product. Have a similar project? Let’s talk.</p>
         </div>
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 lg:h-[520px]">

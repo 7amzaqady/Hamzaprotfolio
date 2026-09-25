@@ -20,12 +20,6 @@ function waitForMedia(element: HTMLImageElement | HTMLVideoElement) {
   })
 }
 
-function preloadImage(source: string) {
-  const image = new Image()
-  image.src = source
-  return waitForMedia(image)
-}
-
 export default function IntroLoader({ onDone }: { onDone: () => void }) {
   const [progress, setProgress] = useState(0)
   const [wordIndex, setWordIndex] = useState(0)
@@ -42,13 +36,10 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
     const started = performance.now()
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    const images = [...document.querySelectorAll<HTMLImageElement>('main img')]
-    const videos = [...document.querySelectorAll<HTMLVideoElement>('main video')]
+    const heroVideo = document.querySelector<HTMLVideoElement>('#home video')
     const tasks = [
-      ...images.map((image) => preloadImage(image.currentSrc || image.src)),
-      ...videos.map(waitForMedia),
+      ...(heroVideo ? [waitForMedia(heroVideo)] : []),
       document.fonts.ready,
-      import('./Galaxy'),
     ]
     const total = tasks.length
     const finish = () => {
@@ -57,7 +48,7 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
       setProgress(100)
       window.setTimeout(() => { if (active) onDone() }, 320)
     }
-    const timeout = window.setTimeout(finish, 8000)
+    const timeout = window.setTimeout(finish, 2500)
 
     tasks.forEach((task) => {
       Promise.resolve(task).catch(() => undefined).finally(() => {

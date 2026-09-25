@@ -68,6 +68,6 @@ export default function ChromaSnapPage() {
       <div className="chroma-details-copy"><p>The image is resized for analysis inside the browser. ChromaSnap samples its pixels, groups nearby RGB colors, and chooses five representative colors with enough separation to make the palette useful.</p><p>Every step happens on the visitor’s device. The image is never uploaded to a server, and the tool needs no account or paid API.</p><a href={liveUrl} target="_blank" rel="noopener noreferrer">Open ChromaSnap <span aria-hidden="true">↗</span></a></div>
     </section>
 
-    <footer className="chroma-footer"><span>CHROMASNAP / 2026</span><div><a href={`${import.meta.env.BASE_URL}#work`}>↖ Selected work</a><a href="#chroma-top">Back to top ↑</a></div></footer>
+    <footer className="chroma-footer"><span>CHROMASNAP / 2026</span><div><a href="https://wa.me/963993720719" target="_blank" rel="noopener noreferrer">Discuss your landing page ↗</a><a href={`${import.meta.env.BASE_URL}#work`}>↖ Selected work</a><a href="#chroma-top">Back to top ↑</a></div></footer>
   </main>
 }

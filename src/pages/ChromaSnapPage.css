@@ -54,7 +54,8 @@
 .chroma-details-copy { padding-top: 32px; }
 .chroma-details-copy a { display: inline-flex; justify-content: space-between; gap: 30px; min-width: 210px; margin-top: 22px; padding: 0 0 12px; border-bottom: 1px solid #111; font-size: 1.1rem; font-weight: 700; }
 .chroma-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 22px; padding: 34px clamp(22px, 4vw, 72px) 60px; font: 500 .75rem 'DM Mono', monospace; }
-.chroma-footer div { display: flex; gap: 28px; }
+.chroma-footer div { display: flex; flex-wrap: wrap; gap: 28px; }
+.chroma-footer div a:first-child { color: #c84827; font-weight: 700; }
 
 @media (max-width: 900px) {
   .chroma-hero { grid-template-columns: 1fr; }

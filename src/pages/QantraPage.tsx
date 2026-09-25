@@ -311,6 +311,7 @@ export default function QantraPage() {
           <i aria-hidden="true" />
         </div>
         <div className="qantra-closing-links">
+          <a href="https://wa.me/963993720719" target="_blank" rel="noopener noreferrer">ناقش مشروع هويتك <span>↗</span></a>
           <a href={import.meta.env.BASE_URL + '#work'}>العودة إلى المشاريع <span>↗</span></a>
           <a href="#qantra-top">إلى الأعلى <span>↑</span></a>
         </div>
