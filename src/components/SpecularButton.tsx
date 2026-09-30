@@ -236,7 +236,7 @@ const SpecularButton = ({
       type={href ? undefined : type}
       disabled={href ? undefined : disabled}
       onClick={onClick}
-      className={`specular-button specular-button--${size}${className ? ` ${className}` : ''}`}
+      className={`specular-button specular-button--${size}${effectsEnabled ? ' specular-button--webgl' : ' specular-button--fallback'}${className ? ` ${className}` : ''}`}
       style={{
         '--sb-radius': `${radius}px`,
         '--sb-tint': tint,

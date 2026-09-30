@@ -1,6 +1,6 @@
 import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import { AnimatePresence, motion, useInView } from 'motion/react'
+import { useInView } from 'motion/react'
 import GooeyNav from './components/GooeyNav'
 import CurtainReveal from './components/CurtainReveal'
 import BorderGlow from './components/BorderGlow'
@@ -27,16 +27,23 @@ class EffectBoundary extends Component<{ children: ReactNode }, { failed: boolea
 }
 
 function useMotionAllowed() {
-  const [allowed, setAllowed] = useState(() =>
-    new URLSearchParams(window.location.search).get('motion') !== '0' &&
-    !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  )
+  const readPreference = () => {
+    const setting = new URLSearchParams(window.location.search).get('motion')
+    return setting === '1' || (setting !== '0' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }
+  const [allowed, setAllowed] = useState(readPreference)
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setAllowed(!preference.matches && new URLSearchParams(window.location.search).get('motion') !== '0')
+    const update = () => setAllowed(readPreference())
     preference.addEventListener('change', update)
+    window.addEventListener('portfolio-motion-change', update)
+    window.addEventListener('popstate', update)
     update()
-    return () => preference.removeEventListener('change', update)
+    return () => {
+      preference.removeEventListener('change', update)
+      window.removeEventListener('portfolio-motion-change', update)
+      window.removeEventListener('popstate', update)
+    }
   }, [])
   return allowed
 }
@@ -57,7 +64,7 @@ function useDesktopEffects() {
   const motionAllowed = useMotionAllowed()
   const [enabled, setEnabled] = useState(false)
   useEffect(() => {
-    const desktop = window.matchMedia('(min-width: 768px) and (pointer: fine)')
+    const desktop = window.matchMedia('(min-width: 768px) and (any-pointer: fine)')
     const update = () => setEnabled(motionAllowed && desktop.matches && supportsWebGL())
     // Give the readable hero a head start before loading decorative bundles.
     const timer = window.setTimeout(update, 500)
@@ -70,7 +77,10 @@ function useDesktopEffects() {
 
 function HeroName() {
   const enabled = useDesktopEffects()
+  const motionAllowed = useMotionAllowed()
   const [ready, setReady] = useState(false)
+  const displacement = useRef<SVGFEDisplacementMapElement>(null)
+  const turbulence = useRef<SVGFETurbulenceElement>(null)
   const [fontSize, setFontSize] = useState(128)
   useEffect(() => {
     const measure = () => setFontSize(Math.min(144, Math.max(64, Math.round(window.innerWidth * (window.innerWidth < 768 ? .19 : .097)))))
@@ -78,7 +88,26 @@ function HeroName() {
     window.addEventListener('resize', measure, { passive: true })
     return () => window.removeEventListener('resize', measure)
   }, [])
-  return <div className={`hero-name${enabled && ready ? ' hero-name-ready' : ''}`} style={{ fontSize, height: Math.round(fontSize * 1.62) }}>
+  return <div className={`hero-name${enabled && ready ? ' hero-name-ready' : ''}${motionAllowed ? ' hero-name-interactive' : ''}`}
+    style={{ fontSize, height: Math.round(fontSize * 1.62) }}
+    onPointerMove={event => {
+      if (!motionAllowed || (enabled && ready)) return
+      const rect = event.currentTarget.getBoundingClientRect()
+      event.currentTarget.style.setProperty('--pointer-x', `${event.clientX - rect.left}px`)
+      event.currentTarget.style.setProperty('--pointer-y', `${event.clientY - rect.top}px`)
+      event.currentTarget.dataset.pointerActive = 'true'
+      displacement.current?.setAttribute('scale', String(Math.min(12, fontSize * .08)))
+      turbulence.current?.setAttribute('baseFrequency', `${.012 + (event.clientX - rect.left) / rect.width * .008} ${.018 + (event.clientY - rect.top) / rect.height * .008}`)
+    }} onPointerLeave={event => {
+      event.currentTarget.dataset.pointerActive = 'false'
+      displacement.current?.setAttribute('scale', '0')
+    }}>
+    <svg className="hero-name-filter" aria-hidden="true" width="0" height="0"><defs>
+      <filter id="hero-name-ripple" x="-10%" y="-20%" width="120%" height="140%" colorInterpolationFilters="sRGB">
+        <feTurbulence ref={turbulence} type="fractalNoise" baseFrequency=".012 .018" numOctaves="1" result="ripple" />
+        <feDisplacementMap ref={displacement} in="SourceGraphic" in2="ripple" scale="0" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs></svg>
     <h1>HAMZA<br />QADY</h1>
     {enabled && <div className="hero-name-fluid" aria-hidden="true"><EffectBoundary><Suspense fallback={null}>
       <FluidText text={'HAMZA\nQADY'} color="#E1E0CC" paletteColors={['#FFF9E8', '#F0D9A8', '#C98C4B']}
@@ -90,7 +119,25 @@ function HeroName() {
 
 function PortfolioGalaxy() {
   const enabled = useDesktopEffects()
-  return <div className="portfolio-backdrop" aria-hidden="true">
+  const motionAllowed = useMotionAllowed()
+  const backdrop = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!motionAllowed) return
+    const follow = (event: PointerEvent) => {
+      backdrop.current?.style.setProperty('--star-x', `${(event.clientX / window.innerWidth - .5) * 24}px`)
+      backdrop.current?.style.setProperty('--star-y', `${(event.clientY / window.innerHeight - .5) * 24}px`)
+    }
+    window.addEventListener('pointermove', follow, { passive: true })
+    return () => window.removeEventListener('pointermove', follow)
+  }, [motionAllowed])
+  return <div ref={backdrop} className="portfolio-backdrop" aria-hidden="true">
+    {motionAllowed && <div className={`galaxy-fallback${enabled ? ' galaxy-fallback-underlay' : ''}`}>
+      {Array.from({ length: 42 }, (_, index) => <span key={index} style={{
+        left: `${(index * 37 + 7) % 100}%`, top: `${(index * 53 + 11) % 100}%`,
+        width: index % 5 === 0 ? 3 : 2, height: index % 5 === 0 ? 3 : 2,
+        animationDelay: `${-(index % 9)}s`, animationDuration: `${3 + index % 5}s`,
+      }} />)}
+    </div>}
     {enabled && <div className="portfolio-galaxy"><EffectBoundary><Suspense fallback={null}>
       <Galaxy focal={[.5, .5]} rotation={[1, 0]} starSpeed={.34} density={.9} hueShift={28} speed={.55}
         mouseInteraction glowIntensity={.24} saturation={.42} mouseRepulsion repulsionStrength={2.6}
@@ -141,11 +188,7 @@ function RotatingRole() {
   }, [motionAllowed])
   return <div className="hero-role" aria-label="Visual Identity Designer and Frontend Developer">
     <span className="role-dot" aria-hidden="true" /><span className="role-label">I work as</span>
-    <span className="rotating-role" aria-hidden="true"><AnimatePresence mode="wait" initial={false}>
-      <motion.span key={roles[index]} initial={motionAllowed ? { y: 18, opacity: 0 } : false}
-        animate={{ y: 0, opacity: 1 }} exit={motionAllowed ? { y: -18, opacity: 0 } : undefined}
-        transition={{ duration: .45, ease: [.16, 1, .3, 1] }}>{roles[index]}</motion.span>
-    </AnimatePresence></span>
+    <span className="rotating-role" aria-hidden="true"><span key={roles[index]} className={motionAllowed ? 'role-enter' : ''}>{roles[index]}</span></span>
   </div>
 }
 
@@ -196,6 +239,7 @@ function HeroBackgroundVideo() {
 }
 
 function Hero() {
+  const motionAllowed = useMotionAllowed()
   return <section id="home" className="portfolio-hero" aria-label="Introduction">
     <div className="hero-frame">
       <HeroBackgroundVideo />
@@ -210,6 +254,12 @@ function Hero() {
             <a className="portfolio-button" href="#work">View selected work <ArrowRight size={18} aria-hidden="true" /></a>
             <a className="portfolio-text-link" href="#contact">Let’s talk <ArrowUpRight size={16} aria-hidden="true" /></a>
           </div>
+          <button className="motion-toggle" type="button" aria-pressed={motionAllowed} onClick={() => {
+            const url = new URL(window.location.href)
+            url.searchParams.set('motion', motionAllowed ? '0' : '1')
+            window.history.replaceState(null, '', url)
+            window.dispatchEvent(new Event('portfolio-motion-change'))
+          }}>{motionAllowed ? 'Pause motion' : 'Enable motion'}</button>
         </div>
       </div>
     </div>
@@ -299,15 +349,19 @@ function Work() {
         <p>Visual identities and digital experiences.<br />Explore the thinking behind each project.</p>
       </div>
       <div className="project-grid">
-        {projects.map((project, index) => <motion.div key={project.id} initial={false}
-          whileInView={motionAllowed ? { opacity: [0.85, 1], y: [12, 0] } : undefined}
-          viewport={{ once: true, amount: .15 }} transition={{ duration: .45, ease: [.16, 1, .3, 1] }}>
+        {projects.map((project, index) => <ProjectReveal key={project.id} motionAllowed={motionAllowed}>
           <ProjectCard project={project} index={index} />
-        </motion.div>)}
+        </ProjectReveal>)}
         {projects.length < 4 && <UpcomingProject />}
       </div>
     </div>
   </section>
+}
+
+function ProjectReveal({ children, motionAllowed }: { children: ReactNode; motionAllowed: boolean }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, amount: .15 })
+  return <div ref={ref} className={motionAllowed && inView ? 'project-reveal' : ''}>{children}</div>
 }
 
 function About() {
@@ -360,7 +414,8 @@ export default function App() {
   const finishIntro = useCallback(() => setLoading(false), [])
   useEffect(() => {
     document.documentElement.classList.toggle('motion-disabled', !motionAllowed)
-    return () => document.documentElement.classList.remove('motion-disabled')
+    document.documentElement.classList.toggle('force-motion', motionAllowed && new URLSearchParams(window.location.search).get('motion') === '1')
+    return () => document.documentElement.classList.remove('motion-disabled', 'force-motion')
   }, [motionAllowed])
   useEffect(() => {
     if (project) return
