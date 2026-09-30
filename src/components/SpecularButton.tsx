@@ -83,6 +83,8 @@ const SpecularButton = ({
   autoAnimate = false,
   disabled = false,
   onClick,
+  href,
+  effectsEnabled = true,
   className = '',
   type = 'button'
 }: any) => {
@@ -95,11 +97,14 @@ const SpecularButton = ({
   useEffect(() => {
     const btn = btnRef.current;
     const fx = fxRef.current;
-    if (!btn || !fx) return;
+    if (!btn || !fx || !effectsEnabled) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let renderer;
+    try { renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr }); }
+    catch { return; }
     const gl = renderer.gl;
+    if (!gl) return;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -175,7 +180,7 @@ const SpecularButton = ({
     const baseC = new Color();
 
     const update = now => {
-      raf = requestAnimationFrame(update);
+      if (document.hidden || !visible || gl.isContextLost()) { raf = 0; return; }
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       const p = propsRef.current;
@@ -200,23 +205,36 @@ const SpecularButton = ({
       program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
       program.uniforms.uThickness.value = p.thickness * dpr;
       renderer.render({ scene: mesh });
+      raf = requestAnimationFrame(update);
     };
-    raf = requestAnimationFrame(update);
+    let visible = false;
+    const sync = () => {
+      if (visible && !document.hidden && !gl.isContextLost()) {
+        if (!raf) { last = performance.now(); raf = requestAnimationFrame(update); }
+      } else { cancelAnimationFrame(raf); raf = 0; }
+    };
+    const io = new IntersectionObserver(entries => { visible = entries[0]?.isIntersecting ?? false; sync(); });
+    io.observe(btn);
+    document.addEventListener('visibilitychange', sync);
 
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', sync);
       window.removeEventListener('pointermove', onPointerMove);
       if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, []);
+  }, [effectsEnabled]);
 
+  const Tag = href ? 'a' : 'button';
   return (
-    <button
+    <Tag
       ref={btnRef}
-      type={type}
-      disabled={disabled}
+      href={href}
+      type={href ? undefined : type}
+      disabled={href ? undefined : disabled}
       onClick={onClick}
       className={`specular-button specular-button--${size}${className ? ` ${className}` : ''}`}
       style={{
@@ -229,7 +247,7 @@ const SpecularButton = ({
     >
       <span ref={fxRef} className="specular-button__fx" aria-hidden="true" />
       <span className="specular-button__label">{children}</span>
-    </button>
+    </Tag>
   );
 };
 

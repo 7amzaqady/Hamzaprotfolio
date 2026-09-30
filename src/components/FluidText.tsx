@@ -15,6 +15,7 @@ type Props = {
   curl?: number;
   densityDissipation?: number;
   style?: React.CSSProperties;
+  onReady?: (ready: boolean) => void;
 };
 
 const DEFAULT_FONT: React.CSSProperties = {
@@ -459,12 +460,13 @@ export default function FluidText(props: Props) {
     curl,
     splatRadius: splatRadius / 20,
     splatForce: splatForce * 1000,
+    onReady: props.onReady,
   };
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const onLost = (e: Event) => e.preventDefault();
+    const onLost = (e: Event) => { e.preventDefault(); live.current?.onReady?.(false); };
     const onRestored = () => setGlEpoch((n) => n + 1);
     canvas.addEventListener("webglcontextlost", onLost);
     canvas.addEventListener("webglcontextrestored", onRestored);
@@ -477,6 +479,7 @@ export default function FluidText(props: Props) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    live.current.onReady?.(false);
 
     const params: WebGLContextAttributes = {
       alpha: true,
@@ -1241,6 +1244,7 @@ export default function FluidText(props: Props) {
     let lastShading = effectiveShading();
     let needsResize = true;
     let raf = 0;
+    let reportedReady = false;
 
     const frame = () => {
       if (g.isContextLost()) {
@@ -1281,6 +1285,10 @@ export default function FluidText(props: Props) {
       applyInputs();
       step(dt);
       render();
+      if (!reportedReady) {
+        reportedReady = true;
+        live.current.onReady?.(true);
+      }
       raf = requestAnimationFrame(frame);
     };
 
