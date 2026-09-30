@@ -10,14 +10,18 @@ const GooeyNav = ({
   particleR = 100,
   timeVariance = 300,
   colors = [1, 2, 3, 1, 2, 3, 1, 4],
-  initialActiveIndex = 0
+  initialActiveIndex = 0,
+  activeItemIndex,
+  motionAllowed = true
 }) => {
   const containerRef = useRef(null);
   const navRef = useRef(null);
   const filterRef = useRef(null);
   const textRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
-  const forceMotion = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('motion') !== '0';
+  useEffect(() => {
+    if (activeItemIndex >= 0) setActiveIndex(activeItemIndex);
+  }, [activeItemIndex]);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
@@ -39,7 +43,7 @@ const GooeyNav = ({
   };
 
   const makeParticles = element => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && !forceMotion) return;
+    if (!motionAllowed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const d = particleDistances;
     const r = particleR;
@@ -122,13 +126,9 @@ const GooeyNav = ({
   };
 
   const handleKeyDown = (e, index) => {
-    if (e.key === 'Enter' || e.key === ' ') {
+    if (e.key === ' ') {
       e.preventDefault();
-      const liEl = e.currentTarget.parentElement;
-      if (liEl) {
-        handleClick({ currentTarget: liEl }, index);
-        document.querySelector(items[index].href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      e.currentTarget.click();
     }
   };
 
@@ -151,13 +151,14 @@ const GooeyNav = ({
   }, [activeIndex]);
 
   return (
-    <div className={`gooey-nav-container${forceMotion ? " force-motion" : ""}`} ref={containerRef}>
+    <div className={`gooey-nav-container${motionAllowed ? '' : ' motion-disabled'}`} ref={containerRef}>
       <nav aria-label="Primary navigation">
         <ul ref={navRef}>
           {items.map((item, index) => (
             <li key={item.href} className={activeIndex === index ? 'active' : ''}>
               <a
                 href={item.href}
+                aria-current={activeIndex === index ? 'location' : undefined}
                 onClick={e => handleClick(e, index)}
                 onKeyDown={e => handleKeyDown(e, index)}
               >
@@ -167,8 +168,8 @@ const GooeyNav = ({
           ))}
         </ul>
       </nav>
-      <span className="effect filter" ref={filterRef} />
-      <span className="effect text" ref={textRef} />
+      <span className="effect filter" ref={filterRef} aria-hidden="true" />
+      <span className="effect text" ref={textRef} aria-hidden="true" />
     </div>
   );
 };

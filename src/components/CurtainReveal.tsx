@@ -78,9 +78,10 @@ function __OriginkitBase_CurtainReveal({
     const fontStyles = (font ?? {}) as React.CSSProperties;
     const safeTag = (TAGS as readonly string[]).includes(tag) ? tag : "h3";
     const Tag = (motion as any)[safeTag];
+    const Wrapper = safeTag === 'span' ? 'span' : 'div';
 
     return (
-        <div
+        <Wrapper
             ref={scope}
             style={{
                 width: "100%",
@@ -108,7 +109,7 @@ function __OriginkitBase_CurtainReveal({
             >
                 {text}
             </Tag>
-        </div>
+        </Wrapper>
     );
 }
 
