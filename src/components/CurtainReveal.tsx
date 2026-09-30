@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useCallback } from "react";
-import { motion, useAnimate, type AnimationOptions } from "framer-motion";
+import type { AnimationOptions } from "framer-motion";
 
 const TAGS = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "div", "span"] as const;
 
@@ -54,35 +53,15 @@ function __OriginkitBase_CurtainReveal({
         duration: 1,
     },
 }: Partial<Props>) {
-    const [scope, animate] = useAnimate();
-
     const startClip = INSET_MAP[direction] || INSET_MAP["center-horizontal"];
-    const endClip = "inset(0% 0% 0% 0%)";
-
-    const resetToHidden = useCallback(() => {
-        if (!scope.current) return;
-        animate(".curtain-text", { clipPath: startClip }, { duration: 0 });
-    }, [animate, startClip, scope]);
-
-    const runAppear = useCallback(() => {
-        if (!scope.current) return;
-        animate(".curtain-text", { clipPath: endClip }, transition as any);
-    }, [animate, transition, endClip, scope]);
-
-    useEffect(() => {
-        resetToHidden();
-        const t = setTimeout(runAppear, 50);
-        return () => clearTimeout(t);
-    }, [runAppear, resetToHidden]);
 
     const fontStyles = (font ?? {}) as React.CSSProperties;
     const safeTag = (TAGS as readonly string[]).includes(tag) ? tag : "h3";
-    const Tag = (motion as any)[safeTag];
+    const Tag = safeTag as (typeof TAGS)[number];
     const Wrapper = safeTag === 'span' ? 'span' : 'div';
 
     return (
         <Wrapper
-            ref={scope}
             style={{
                 width: "100%",
                 display: "flex",
@@ -103,9 +82,9 @@ function __OriginkitBase_CurtainReveal({
                     whiteSpace: "pre-wrap",
                     ...fontStyles,
                     color,
-                    clipPath: startClip,
-                    willChange: "clip-path",
-                }}
+                    '--curtain-from': startClip,
+                    animation: `curtain-text-reveal ${transition.duration ?? 1}s cubic-bezier(.16,1,.3,1) ${transition.delay ?? 0}s both`,
+                } as React.CSSProperties}
             >
                 {text}
             </Tag>

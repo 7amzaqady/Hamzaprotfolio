@@ -43,7 +43,7 @@ const GooeyNav = ({
   };
 
   const makeParticles = element => {
-    if (!motionAllowed || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!motionAllowed) return;
 
     const d = particleDistances;
     const r = particleR;
@@ -151,7 +151,7 @@ const GooeyNav = ({
   }, [activeIndex]);
 
   return (
-    <div className={`gooey-nav-container${motionAllowed ? '' : ' motion-disabled'}`} ref={containerRef}>
+    <div className={`gooey-nav-container${motionAllowed ? ' force-motion' : ' motion-disabled'}`} ref={containerRef}>
       <nav aria-label="Primary navigation">
         <ul ref={navRef}>
           {items.map((item, index) => (

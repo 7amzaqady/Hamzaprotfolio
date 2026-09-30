@@ -50,7 +50,8 @@ const COLOR_SPEED = 0.125;
 const VELOCITY_DISSIPATION = 2;
 const PRESSURE = 1 / 20;
 const SIM_RESOLUTION = 128;
-const DYE_RESOLUTION = 1440;
+// The dye is a soft color field; the text mask keeps its full canvas resolution.
+const DYE_RESOLUTION = 512;
 const PRESSURE_ITERATIONS = 20;
 const MAX_COLORS = 5;
 
@@ -1061,7 +1062,8 @@ export default function FluidText(props: Props) {
 
     let inside = false;
 
-    const scaleByPixelRatio = (input: number) => Math.floor(input * (window.devicePixelRatio || 1));
+    const pixelRatio = () => Math.min(window.devicePixelRatio || 1, 1.5);
+    const scaleByPixelRatio = (input: number) => Math.floor(input * pixelRatio());
 
     const texcoords = (clientX: number, clientY: number) => {
       const rect = canvas.getBoundingClientRect();
@@ -1277,7 +1279,7 @@ export default function FluidText(props: Props) {
         updateKeywords();
       }
 
-      syncMask(window.devicePixelRatio || 1);
+      syncMask(pixelRatio());
 
       colorPhase = (colorPhase + dt * COLOR_SPEED) % 1;
       pointer.color = paletteAt(colorPhase);
