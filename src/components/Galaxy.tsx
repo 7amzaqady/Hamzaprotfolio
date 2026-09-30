@@ -206,10 +206,13 @@ export default function Galaxy({
   useEffect(() => {
     if (!ctnDom.current) return;
     const ctn = ctnDom.current;
-    const renderer = new Renderer({
-      alpha: transparent,
-      premultipliedAlpha: false
-    });
+    let renderer;
+    try {
+      renderer = new Renderer({ alpha: transparent, premultipliedAlpha: false });
+    } catch {
+      // A decorative background must not crash the rest of the page.
+      return;
+    }
     const gl = renderer.gl;
 
     if (lightMode) {
@@ -273,6 +276,7 @@ export default function Galaxy({
     let animateId;
 
     function update(t) {
+      if (document.hidden || gl.isContextLost()) return;
       animateId = requestAnimationFrame(update);
       if (!disableAnimation) {
         program.uniforms.uTime.value = t * 0.001;
@@ -293,6 +297,18 @@ export default function Galaxy({
     }
     animateId = requestAnimationFrame(update);
     ctn.appendChild(gl.canvas);
+
+    function handleVisibility() {
+      cancelAnimationFrame(animateId);
+      if (!document.hidden && !gl.isContextLost()) animateId = requestAnimationFrame(update);
+    }
+    function handleContextLost(event) {
+      event.preventDefault();
+      cancelAnimationFrame(animateId);
+      gl.canvas.style.visibility = 'hidden';
+    }
+    document.addEventListener('visibilitychange', handleVisibility);
+    gl.canvas.addEventListener('webglcontextlost', handleContextLost);
 
     function handleMouseMove(e) {
       const rect = ctn.getBoundingClientRect();
@@ -318,7 +334,9 @@ export default function Galaxy({
         window.removeEventListener('pointermove', handleMouseMove);
         window.removeEventListener('blur', handleMouseLeave);
       }
-      ctn.removeChild(gl.canvas);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      gl.canvas.removeEventListener('webglcontextlost', handleContextLost);
+      gl.canvas.remove();
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [
